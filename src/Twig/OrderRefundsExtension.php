@@ -14,6 +14,9 @@ final class OrderRefundsExtension extends \Twig_Extension
     /** @var OrderRefundedTotalProviderInterface */
     private $orderRefundedTotalProvider;
 
+    /** @var OrderRefundedTotalProviderInterface */
+    private $orderRefundedFeeTotalProvider;
+
     /** @var UnitRefundedTotalProviderInterface */
     private $unitRefundedTotalProvider;
 
@@ -22,10 +25,12 @@ final class OrderRefundsExtension extends \Twig_Extension
 
     public function __construct(
         OrderRefundedTotalProviderInterface $orderRefundedTotalProvider,
+        OrderRefundedTotalProviderInterface $orderRefundedFeeTotalProvider,
         UnitRefundedTotalProviderInterface $unitRefundedTotalProvider,
         UnitRefundingAvailabilityCheckerInterface $unitRefundingAvailabilityChecker
     ) {
         $this->orderRefundedTotalProvider = $orderRefundedTotalProvider;
+        $this->orderRefundedFeeTotalProvider = $orderRefundedFeeTotalProvider;
         $this->unitRefundedTotalProvider = $unitRefundedTotalProvider;
         $this->unitRefundingAvailabilityChecker = $unitRefundingAvailabilityChecker;
     }
@@ -36,6 +41,10 @@ final class OrderRefundsExtension extends \Twig_Extension
             new \Twig_Function(
                 'order_refunded_total',
                 [$this->orderRefundedTotalProvider, '__invoke']
+            ),
+            new \Twig_Function(
+                'order_refunded_fee_total',
+                [$this->orderRefundedFeeTotalProvider, '__invoke']
             ),
             new \Twig_Function(
                 'unit_refunded_total',
