@@ -8,6 +8,9 @@ namespace Sylius\RefundPlugin\Entity;
 class CreditMemoUnit implements CreditMemoUnitInterface
 {
     /** @var string */
+    private $type;
+
+    /** @var string */
     private $productName;
 
     /** @var int */
@@ -16,11 +19,17 @@ class CreditMemoUnit implements CreditMemoUnitInterface
     /** @var int */
     private $taxesTotal;
 
-    public function __construct(string $productName, int $total, int $taxesTotal)
+    public function __construct(string $type, string $productName, int $total, int $taxesTotal)
     {
+        $this->type = $type;
         $this->productName = $productName;
         $this->total = $total;
         $this->taxesTotal = $taxesTotal;
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
     }
 
     public function getProductName(): string
@@ -41,6 +50,7 @@ class CreditMemoUnit implements CreditMemoUnitInterface
     public function serialize(): string
     {
         $serialized = json_encode([
+            'type' => $this->type,
             'product_name' => $this->productName,
             'total' => $this->total,
             'taxes_total' => $this->taxesTotal,
@@ -58,6 +68,7 @@ class CreditMemoUnit implements CreditMemoUnitInterface
         $data = json_decode($serialized, true);
 
         return new self(
+            $data['type'],
             $data['product_name'],
             $data['total'],
             $data['taxes_total']

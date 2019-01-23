@@ -6,6 +6,8 @@ namespace Sylius\RefundPlugin\Entity;
 
 interface CreditMemoUnitInterface
 {
+    public function getType(): string;
+
     public function getProductName(): string;
 
     public function getTotal(): int;

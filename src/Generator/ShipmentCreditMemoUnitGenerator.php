@@ -9,6 +9,7 @@ use Sylius\Component\Order\Model\AdjustmentInterface as OrderAdjustmentInterface
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Sylius\RefundPlugin\Entity\CreditMemoUnit;
 use Sylius\RefundPlugin\Entity\CreditMemoUnitInterface;
+use Sylius\RefundPlugin\Model\RefundType;
 use Webmozart\Assert\Assert;
 
 final class ShipmentCreditMemoUnitGenerator implements CreditMemoUnitGeneratorInterface
@@ -32,7 +33,7 @@ final class ShipmentCreditMemoUnitGenerator implements CreditMemoUnitGeneratorIn
 
         $creditMemoUnitTotal = $this->getCreditMemoUnitTotal($shippingAdjustment, $amount);
 
-        return new CreditMemoUnit($shippingAdjustment->getLabel(), $creditMemoUnitTotal, 0);
+        return new CreditMemoUnit(RefundType::SHIPMENT, $shippingAdjustment->getLabel(), $creditMemoUnitTotal, 0);
     }
 
     private function getCreditMemoUnitTotal(OrderAdjustmentInterface $shippingAdjustment, int $amount = null): int

@@ -24,7 +24,11 @@
     {% for unit in creditMemo.units %}
         <tr>
             <td>
-                {{ unit.productName }}
+                {% if unit.type == 'fee' %}
+                    {{ ('sylius.ui.credit_memo.fees.' ~ unit.productName)|trans }}
+                {% else %}
+                    {{ unit.productName }}
+                {% endif %}
             </td>
             <td>
                 {{ unit.taxesTotal|sylius_format_money(creditMemo.currencyCode, creditMemo.localeCode) }}

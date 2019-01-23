@@ -9,6 +9,7 @@ use Sylius\Component\Core\Model\OrderItemUnitInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Sylius\RefundPlugin\Entity\CreditMemoUnit;
 use Sylius\RefundPlugin\Entity\CreditMemoUnitInterface;
+use Sylius\RefundPlugin\Model\RefundType;
 use Webmozart\Assert\Assert;
 
 final class FeeCreditMemoUnitGenerator implements CreditMemoUnitGeneratorInterface
@@ -25,6 +26,7 @@ final class FeeCreditMemoUnitGenerator implements CreditMemoUnitGeneratorInterfa
     {
         if (empty($amount)) {
             return new CreditMemoUnit(
+                RefundType::FEE,
                 strval($unitId),
                 0,
                 0
@@ -40,6 +42,7 @@ final class FeeCreditMemoUnitGenerator implements CreditMemoUnitGeneratorInterfa
         $taxRate = $orderItemUnit->getTaxTotal() / (float) ($orderItemUnit->getTotal() - $orderItemUnit->getTaxTotal());
 
         return new CreditMemoUnit(
+            RefundType::FEE,
             strval($unitId),
             $amount,
             (int) (($amount / (1 + $taxRate)) * $taxRate)
