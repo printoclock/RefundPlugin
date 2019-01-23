@@ -10,13 +10,14 @@ final class RefundType
 {
     public const ORDER_ITEM_UNIT = 'order_item_unit';
     public const SHIPMENT = 'shipment';
+    public const FEE = 'fee';
 
     /** @var string */
     private $value;
 
     public function __construct(string $value)
     {
-        if (!in_array($value, [self::ORDER_ITEM_UNIT, self::SHIPMENT])) {
+        if (!in_array($value, [self::ORDER_ITEM_UNIT, self::SHIPMENT, self::FEE])) {
             throw RefundTypeNotResolved::withType($value);
         }
 
@@ -31,6 +32,11 @@ final class RefundType
     public static function shipment(): self
     {
         return new self(self::SHIPMENT);
+    }
+
+    public static function fee(): self
+    {
+        return new self(self::FEE);
     }
 
     public function equals(self $refundType): bool
