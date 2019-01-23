@@ -91,7 +91,7 @@ final class CreditMemoGenerator implements CreditMemoGeneratorInterface
         /** @var UnitRefundInterface $fee */
         foreach ($fees as $fee) {
             $creditMemoUnits[] = $this->feeCreditMemoUnitGenerator
-                ->generate($fee->id(), $fee->total())
+                ->generate($fee->id(), $fee->total(), $order->getItemUnits()->first())
                 ->serialize();
         }
 

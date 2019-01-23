@@ -21,7 +21,7 @@ final class OrderItemUnitCreditMemoUnitGenerator implements CreditMemoUnitGenera
         $this->orderItemUnitRepository = $orderItemUnitRepository;
     }
 
-    public function generate(int $unitId, int $amount = null): CreditMemoUnitInterface
+    public function generate(int $unitId, int $amount = null, $extra = null): CreditMemoUnitInterface
     {
         /** @var OrderItemUnitInterface $orderItemUnit */
         $orderItemUnit = $this->orderItemUnitRepository->find($unitId);

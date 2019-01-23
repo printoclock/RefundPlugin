@@ -21,7 +21,7 @@ final class FeeCreditMemoUnitGenerator implements CreditMemoUnitGeneratorInterfa
         $this->orderItemUnitRepository = $orderItemUnitRepository;
     }
 
-    public function generate(int $unitId, int $amount = null): CreditMemoUnitInterface
+    public function generate(int $unitId, int $amount = null, $extra = null): CreditMemoUnitInterface
     {
         if (empty($amount)) {
             return new CreditMemoUnit(
@@ -31,8 +31,10 @@ final class FeeCreditMemoUnitGenerator implements CreditMemoUnitGeneratorInterfa
             );
         }
 
+        Assert::notNull($extra);
+
         /** @var OrderItemUnitInterface $orderItemUnit */
-        $orderItemUnit = $this->orderItemUnitRepository->find($unitId);
+        $orderItemUnit = $this->orderItemUnitRepository->find($extra);
         Assert::notNull($orderItemUnit);
 
         $taxRate = $orderItemUnit->getTaxTotal() / (float) ($orderItemUnit->getTotal() - $orderItemUnit->getTaxTotal());
