@@ -13,7 +13,7 @@ interface CreditMemoGeneratorInterface
         int $total,
         array $units,
         array $shipments,
-        int $fee,
+        array $fees,
         string $comment
     ): CreditMemoInterface;
 }

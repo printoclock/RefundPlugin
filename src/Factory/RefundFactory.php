@@ -10,7 +10,7 @@ use Sylius\RefundPlugin\Model\RefundType;
 
 final class RefundFactory implements RefundFactoryInterface
 {
-    public function createWithData(string $orderNumber, ?int $unitId, int $amount, RefundType $type): RefundInterface
+    public function createWithData(string $orderNumber, int $unitId, int $amount, RefundType $type): RefundInterface
     {
         return new Refund($orderNumber, $amount, $unitId, $type);
     }

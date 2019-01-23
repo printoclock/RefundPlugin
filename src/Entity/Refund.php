@@ -18,13 +18,13 @@ class Refund implements RefundInterface
     /** @var int */
     private $amount;
 
-    /** @var int|null */
+    /** @var int */
     private $refundedUnitId;
 
     /** @var RefundType */
     private $type;
 
-    public function __construct(string $orderNumber, int $amount, ?int $refundedUnitId, RefundType $type)
+    public function __construct(string $orderNumber, int $amount, int $refundedUnitId, RefundType $type)
     {
         $this->orderNumber = $orderNumber;
         $this->amount = $amount;
@@ -47,7 +47,7 @@ class Refund implements RefundInterface
         return $this->amount;
     }
 
-    public function getRefundedUnitId(): ?int
+    public function getRefundedUnitId(): int
     {
         return $this->refundedUnitId;
     }

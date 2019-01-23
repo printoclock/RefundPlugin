@@ -25,7 +25,7 @@ final class FeeCreditMemoUnitGenerator implements CreditMemoUnitGeneratorInterfa
     {
         if (empty($amount)) {
             return new CreditMemoUnit(
-                'Frais de gestion',
+                strval($unitId),
                 0,
                 0
             );
@@ -38,7 +38,7 @@ final class FeeCreditMemoUnitGenerator implements CreditMemoUnitGeneratorInterfa
         $taxRate = $orderItemUnit->getTaxTotal() / (float) ($orderItemUnit->getTotal() - $orderItemUnit->getTaxTotal());
 
         return new CreditMemoUnit(
-            'Frais de gestion',
+            strval($unitId),
             $amount,
             (int) (($amount / (1 + $taxRate)) * $taxRate)
         );

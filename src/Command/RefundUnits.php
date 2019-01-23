@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Sylius\RefundPlugin\Command;
 
+use Sylius\RefundPlugin\Model\FeeRefund;
 use Sylius\RefundPlugin\Model\OrderItemUnitRefund;
 use Sylius\RefundPlugin\Model\ShipmentRefund;
 
@@ -18,8 +19,8 @@ final class RefundUnits
     /** @var array|ShipmentRefund[] */
     private $shipments;
 
-    /** @var int */
-    private $fee;
+    /** @var array|FeeRefund[] */
+    private $fees;
 
     /** @var int */
     private $paymentMethodId;
@@ -31,7 +32,7 @@ final class RefundUnits
         string $orderNumber,
         array $units,
         array $shipments,
-        int $fee,
+        array $fees,
         int $paymentMethodId,
         string $comment
     )
@@ -39,7 +40,7 @@ final class RefundUnits
         $this->orderNumber = $orderNumber;
         $this->units = $units;
         $this->shipments = $shipments;
-        $this->fee = $fee;
+        $this->fees = $fees;
         $this->paymentMethodId = $paymentMethodId;
         $this->comment = $comment;
     }
@@ -61,9 +62,10 @@ final class RefundUnits
         return $this->shipments;
     }
 
-    public function fee(): int
+    /** @return array|FeeRefund[] */
+    public function fees(): array
     {
-        return $this->fee;
+        return $this->fees;
     }
 
     public function paymentMethodId(): int

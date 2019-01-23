@@ -60,7 +60,7 @@ final class CreditMemoGenerator implements CreditMemoGeneratorInterface
         int $total,
         array $units,
         array $shipments,
-        int $fee,
+        array $fees,
         string $comment
     ): CreditMemoInterface {
         /** @var OrderInterface|null $order */
@@ -88,9 +88,10 @@ final class CreditMemoGenerator implements CreditMemoGeneratorInterface
                 ->serialize();
         }
 
-        if (count($units) > 0) {
+        /** @var UnitRefundInterface $fee */
+        foreach ($fees as $fee) {
             $creditMemoUnits[] = $this->feeCreditMemoUnitGenerator
-                ->generate($units[0]->id(), $fee)
+                ->generate($fee->id(), $fee->total())
                 ->serialize();
         }
 
