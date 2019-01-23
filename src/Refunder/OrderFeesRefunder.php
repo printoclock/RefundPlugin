@@ -34,7 +34,7 @@ final class OrderFeesRefunder implements RefunderInterface
 
             $refundedTotal += $feeUnit->total();
 
-            $this->eventBus->dispatch(new FeeRefunded($orderNumber, $feeUnit->total()));
+            $this->eventBus->dispatch(new FeeRefunded($orderNumber, $feeUnit->id(), $feeUnit->total()));
         }
 
         return $refundedTotal;
