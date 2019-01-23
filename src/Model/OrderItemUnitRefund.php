@@ -18,7 +18,7 @@ final class OrderItemUnitRefund implements UnitRefundInterface
         $this->total = $total;
     }
 
-    public function id(): int
+    public function id(): ?int
     {
         return $this->unitId;
     }

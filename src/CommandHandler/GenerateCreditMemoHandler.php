@@ -40,6 +40,7 @@ final class GenerateCreditMemoHandler
             $command->total(),
             $command->units(),
             $command->shipments(),
+            $command->fee(),
             $command->comment()
         );
 

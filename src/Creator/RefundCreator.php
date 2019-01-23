@@ -31,12 +31,14 @@ final class RefundCreator implements RefundCreatorInterface
         $this->refundManager = $refundManager;
     }
 
-    public function __invoke(string $orderNumber, int $unitId, int $amount, RefundType $refundType): void
+    public function __invoke(string $orderNumber, ?int $unitId, int $amount, RefundType $refundType): void
     {
-        $remainingTotal = $this->remainingTotalProvider->getTotalLeftToRefund($unitId, $refundType);
+        if ($unitId !== null) {
+            $remainingTotal = $this->remainingTotalProvider->getTotalLeftToRefund($unitId, $refundType);
 
-        if ($remainingTotal === 0) {
-            throw UnitAlreadyRefundedException::withIdAndOrderNumber($unitId, $orderNumber);
+            if ($remainingTotal === 0) {
+                throw UnitAlreadyRefundedException::withIdAndOrderNumber($unitId, $orderNumber);
+            }
         }
 
         $refund = $this->refundFactory->createWithData($orderNumber, $unitId, $amount, $refundType);

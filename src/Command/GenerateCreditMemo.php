@@ -21,15 +21,26 @@ final class GenerateCreditMemo
     /** @var array|ShipmentRefund[] */
     private $shipments;
 
+    /** @var int */
+    private $fee;
+
     /** @var string */
     private $comment;
 
-    public function __construct(string $orderNumber, int $total, array $units, array $shipments, string $comment)
+    public function __construct(
+        string $orderNumber,
+        int $total,
+        array $units,
+        array $shipments,
+        int $fee,
+        string $comment
+    )
     {
         $this->orderNumber = $orderNumber;
         $this->total = $total;
         $this->units = $units;
         $this->shipments = $shipments;
+        $this->fee = $fee;
         $this->comment = $comment;
     }
 
@@ -53,6 +64,11 @@ final class GenerateCreditMemo
     public function shipments(): array
     {
         return $this->shipments;
+    }
+
+    public function fee(): int
+    {
+        return $this->fee;
     }
 
     public function comment(): string

@@ -19,16 +19,27 @@ final class RefundUnits
     private $shipments;
 
     /** @var int */
+    private $fee;
+
+    /** @var int */
     private $paymentMethodId;
 
     /** @var string */
     private $comment;
 
-    public function __construct(string $orderNumber, array $units, array $shipments, int $paymentMethodId, string $comment)
+    public function __construct(
+        string $orderNumber,
+        array $units,
+        array $shipments,
+        int $fee,
+        int $paymentMethodId,
+        string $comment
+    )
     {
         $this->orderNumber = $orderNumber;
         $this->units = $units;
         $this->shipments = $shipments;
+        $this->fee = $fee;
         $this->paymentMethodId = $paymentMethodId;
         $this->comment = $comment;
     }
@@ -48,6 +59,11 @@ final class RefundUnits
     public function shipments(): array
     {
         return $this->shipments;
+    }
+
+    public function fee(): int
+    {
+        return $this->fee;
     }
 
     public function paymentMethodId(): int

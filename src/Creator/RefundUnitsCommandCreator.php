@@ -39,6 +39,7 @@ final class RefundUnitsCommandCreator implements RefundUnitsCommandCreatorInterf
             $request->attributes->get('orderNumber'),
             $this->parseIdsToUnitRefunds($units),
             $this->parseIdsToShipmentRefunds($shipments),
+            (int) (((float) $request->request->get('sylius_refund_fee', '0')) * -100),
             (int) $request->request->get('sylius_refund_payment_method'),
             $request->request->get('sylius_refund_comment', '')
         );
