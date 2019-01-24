@@ -12,10 +12,13 @@ use Sylius\RefundPlugin\Provider\UnitRefundedTotalProviderInterface;
 final class OrderRefundsExtension extends \Twig_Extension
 {
     /** @var OrderRefundedTotalProviderInterface */
-    private $orderRefundedTotalProvider;
+    private $orderRefundedSubtotalTotalProvider;
 
     /** @var OrderRefundedTotalProviderInterface */
     private $orderRefundedFeeTotalProvider;
+
+    /** @var OrderRefundedTotalProviderInterface */
+    private $orderRefundedTotalProvider;
 
     /** @var UnitRefundedTotalProviderInterface */
     private $unitRefundedTotalProvider;
@@ -24,13 +27,15 @@ final class OrderRefundsExtension extends \Twig_Extension
     private $unitRefundingAvailabilityChecker;
 
     public function __construct(
-        OrderRefundedTotalProviderInterface $orderRefundedTotalProvider,
+        OrderRefundedTotalProviderInterface $orderRefundedSubtotalTotalProvider,
         OrderRefundedTotalProviderInterface $orderRefundedFeeTotalProvider,
+        OrderRefundedTotalProviderInterface $orderRefundedTotalProvider,
         UnitRefundedTotalProviderInterface $unitRefundedTotalProvider,
         UnitRefundingAvailabilityCheckerInterface $unitRefundingAvailabilityChecker
     ) {
-        $this->orderRefundedTotalProvider = $orderRefundedTotalProvider;
+        $this->orderRefundedSubtotalTotalProvider = $orderRefundedSubtotalTotalProvider;
         $this->orderRefundedFeeTotalProvider = $orderRefundedFeeTotalProvider;
+        $this->orderRefundedTotalProvider = $orderRefundedTotalProvider;
         $this->unitRefundedTotalProvider = $unitRefundedTotalProvider;
         $this->unitRefundingAvailabilityChecker = $unitRefundingAvailabilityChecker;
     }
@@ -39,12 +44,16 @@ final class OrderRefundsExtension extends \Twig_Extension
     {
         return [
             new \Twig_Function(
-                'order_refunded_total',
-                [$this->orderRefundedTotalProvider, '__invoke']
+                'order_refunded_subtotal',
+                [$this->orderRefundedSubtotalTotalProvider, '__invoke']
             ),
             new \Twig_Function(
                 'order_refunded_fee_total',
                 [$this->orderRefundedFeeTotalProvider, '__invoke']
+            ),
+            new \Twig_Function(
+                'order_refunded_total',
+                [$this->orderRefundedTotalProvider, '__invoke']
             ),
             new \Twig_Function(
                 'unit_refunded_total',
