@@ -135,6 +135,12 @@ sylius_grid:
                     sortable: amount
                     options:
                         template: '@SyliusRefundPlugin/Grid/Field/amount.html.twig'
+                state:
+                    type: twig
+                    label: sylius_refund.ui.state
+                    sortable: ~
+                    options:
+                        template: '@SyliusRefundPlugin/Grid/Field/refund_payment_state.html.twig'
                 createdAt:
                     type: datetime
                     label: sylius.ui.created_at
@@ -145,6 +151,12 @@ sylius_grid:
                     label: sylius.ui.updated_at
                     options:
                         format: 'Y-m-d H:i:s'
+                actions:
+                    type: twig
+                    label: sylius.ui.actions
+                    path: .
+                    options:
+                        template: '@SyliusRefundPlugin/Grid/Field/refund_payment_actions.html.twig'
             filters:
                 orderNumber:
                     type: string
