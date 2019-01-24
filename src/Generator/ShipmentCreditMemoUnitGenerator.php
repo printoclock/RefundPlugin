@@ -6,6 +6,7 @@ namespace Sylius\RefundPlugin\Generator;
 
 use Sylius\Component\Core\Model\AdjustmentInterface;
 use Sylius\Component\Order\Model\AdjustmentInterface as OrderAdjustmentInterface;
+use Sylius\Component\Order\Model\OrderInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Sylius\RefundPlugin\Entity\CreditMemoUnit;
 use Sylius\RefundPlugin\Entity\CreditMemoUnitInterface;
@@ -25,22 +26,32 @@ final class ShipmentCreditMemoUnitGenerator implements CreditMemoUnitGeneratorIn
     public function generate(int $unitId, int $amount = null, $extra = null): CreditMemoUnitInterface
     {
         /** @var OrderAdjustmentInterface $shippingAdjustment */
-        $shippingAdjustment = $this
-            ->adjustmentRepository
-            ->findOneBy(['id' => $unitId, 'type' => AdjustmentInterface::SHIPPING_ADJUSTMENT])
-        ;
+        $shippingAdjustment = $this->adjustmentRepository->findOneBy(['id' => $unitId, 'type' => AdjustmentInterface::SHIPPING_ADJUSTMENT]);
         Assert::notNull($shippingAdjustment);
 
-        $creditMemoUnitTotal = $this->getCreditMemoUnitTotal($shippingAdjustment, $amount);
+        /** @var OrderInterface $order */
+        $order = $shippingAdjustment->getAdjustable();
 
-        return new CreditMemoUnit(RefundType::SHIPMENT, $shippingAdjustment->getLabel(), $creditMemoUnitTotal, 0);
-    }
+        $shippingPromotionTotal = $order->getAdjustmentsTotal(AdjustmentInterface::ORDER_SHIPPING_PROMOTION_ADJUSTMENT);
+        $shippingTaxTotal = $order->getAdjustmentsTotal(AdjustmentInterface::TAX_ADJUSTMENT);
+        $shippingTotal = $shippingAdjustment->getAmount() + $shippingPromotionTotal + $shippingTaxTotal;
 
-    private function getCreditMemoUnitTotal(OrderAdjustmentInterface $shippingAdjustment, int $amount = null): int
-    {
-        Assert::lessThanEq($amount, $shippingAdjustment->getAmount());
-        $creditMemoUnitTotal = null === $amount ? $shippingAdjustment->getAmount() : $amount;
+        Assert::lessThanEq($amount, $shippingTotal);
 
-        return $creditMemoUnitTotal;
+        if ($amount === $shippingTotal) {
+            return new CreditMemoUnit(
+                RefundType::SHIPMENT,
+                $shippingAdjustment->getLabel(),
+                $shippingTotal,
+                $shippingTaxTotal
+            );
+        }
+
+        return new CreditMemoUnit(
+            RefundType::SHIPMENT,
+            $shippingAdjustment->getLabel(),
+            $amount,
+            (int) ($shippingTaxTotal * ($amount / $shippingTotal))
+        );
     }
 }

@@ -42,13 +42,11 @@ final class OrderItemUnitCreditMemoUnitGenerator implements CreditMemoUnitGenera
             );
         }
 
-        $taxTotal = (int) ($orderItemUnit->getTaxTotal() * ($amount / $total));
-
         return new CreditMemoUnit(
             RefundType::ORDER_ITEM_UNIT,
             $orderItem->getProductName(),
             $amount,
-            $taxTotal
+            (int) ($orderItemUnit->getTaxTotal() * ($amount / $total))
         );
     }
 }
