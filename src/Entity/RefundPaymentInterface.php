@@ -20,5 +20,9 @@ interface RefundPaymentInterface extends ResourceInterface
 
     public function getState(): string;
 
+    public function getCreatedAt(): ?\DateTimeInterface;
+
+    public function getUpdatedAt(): ?\DateTimeInterface;
+
     public function getPaymentMethod(): PaymentMethodInterface;
 }

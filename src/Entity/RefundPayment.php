@@ -24,6 +24,12 @@ class RefundPayment implements RefundPaymentInterface
     /** @var string */
     private $state;
 
+    /** @var \DateTime */
+    private $createdAt;
+
+    /** @var \DateTime */
+    private $updatedAt;
+
     /** @var PaymentMethodInterface */
     private $paymentMethod;
 
@@ -64,6 +70,26 @@ class RefundPayment implements RefundPaymentInterface
     public function setState(string $state): void
     {
         $this->state = $state;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(?\DateTimeInterface $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
     }
 
     public function getId(): int
