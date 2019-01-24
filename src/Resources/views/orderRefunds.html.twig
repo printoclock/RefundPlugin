@@ -98,12 +98,15 @@
                         {% endfor %}
                         {% if order.getAdjustments('shipping')|length > 0 %}
                             {% set shipment = order.getAdjustments('shipping').first() %}
+                            {% set shipmentPromotionTotal = order.getAdjustmentsTotal('order_shipping_promotion') %}
+                            {% set shipmentTaxTotal = order.getAdjustmentsTotal('tax') %}
+                            {% set shipmentTotal = shipment.amount + shipmentPromotionTotal + shipmentTaxTotal %}
                             <tr class="shipment">
                                 <td class="single line">
                                     {{ 'sylius.ui.shipment'|trans }}: {{ shipment.label }}
                                 </td>
                                 <td class="right aligned total">
-                                    {{ money.format(shipment.amount, order.currencyCode) }}
+                                    {{ money.format(shipmentTotal, order.currencyCode) }}
                                     {% set refundedTotal = unit_refunded_total(shipment.id, constant('Sylius\\RefundPlugin\\Model\\RefundType::SHIPMENT')) %}
                                     {% if refundedTotal != 0 %}
                                         <br/><strong>{{ 'sylius_refund.ui.refunded'|trans }}:</strong> <span class="unit-refunded-total">{{ money.format(refundedTotal, order.currencyCode) }}</span>

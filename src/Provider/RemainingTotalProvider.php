@@ -6,6 +6,7 @@ namespace Sylius\RefundPlugin\Provider;
 
 use Sylius\Component\Core\Model\AdjustmentInterface;
 use Sylius\Component\Core\Model\OrderItemUnitInterface;
+use Sylius\Component\Order\Model\OrderInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Sylius\RefundPlugin\Entity\RefundInterface;
 use Sylius\RefundPlugin\Model\RefundType;
@@ -66,7 +67,13 @@ final class RemainingTotalProvider implements RemainingTotalProviderInterface
             ]);
             Assert::notNull($shipment);
 
-            return $shipment->getAmount();
+            /** @var OrderInterface $order */
+            $order = $shipment->getAdjustable();
+
+            $shippingPromotionTotal = $order->getAdjustmentsTotal(AdjustmentInterface::ORDER_SHIPPING_PROMOTION_ADJUSTMENT);
+            $shippingTaxTotal = $order->getAdjustmentsTotal(AdjustmentInterface::TAX_ADJUSTMENT);
+
+            return $shipment->getAmount() + $shippingPromotionTotal + $shippingTaxTotal;
         }
 
         return 0;
