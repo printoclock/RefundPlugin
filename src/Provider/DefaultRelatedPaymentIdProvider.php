@@ -7,6 +7,7 @@ namespace Sylius\RefundPlugin\Provider;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
 use Sylius\Component\Core\Repository\OrderRepositoryInterface;
+use Sylius\Component\Payment\Model\PaymentInterface as BasePaymentInterface;
 use Sylius\RefundPlugin\Entity\RefundPaymentInterface;
 use Sylius\RefundPlugin\Exception\CompletedPaymentNotFound;
 use Sylius\RefundPlugin\Exception\OrderNotFound;
@@ -31,12 +32,25 @@ final class DefaultRelatedPaymentIdProvider implements RelatedPaymentIdProviderI
             throw OrderNotFound::withNumber($orderNumber);
         }
 
-        $payment = $order->getLastPayment(PaymentInterface::STATE_COMPLETED);
+        $payment = $this->getFirstCompletedOrProcessingPayment($order);
 
         if ($payment === null) {
             throw CompletedPaymentNotFound::withNumber($orderNumber);
         }
 
         return $payment->getId();
+    }
+
+    public function getFirstCompletedOrProcessingPayment(OrderInterface $order): ?PaymentInterface
+    {
+        if ($order->getPayments()->isEmpty()) {
+            return null;
+        }
+
+        $payment = $order->getPayments()->filter(function (BasePaymentInterface $payment): bool {
+            return in_array($payment->getState(), [PaymentInterface::STATE_PROCESSING, PaymentInterface::STATE_COMPLETED]);
+        })->first();
+
+        return ($payment !== false) ? $payment : null;
     }
 }

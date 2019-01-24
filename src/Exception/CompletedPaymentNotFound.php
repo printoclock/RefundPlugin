@@ -8,6 +8,6 @@ final class CompletedPaymentNotFound extends \InvalidArgumentException
 {
     public static function withNumber(string $orderNumber): self
     {
-        return new self(sprintf('Order with number "%s" has no completed payments', $orderNumber));
+        return new self(sprintf('Order with number "%s" has no completed or processing payments', $orderNumber));
     }
 }

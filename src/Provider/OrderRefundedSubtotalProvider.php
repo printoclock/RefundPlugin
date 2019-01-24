@@ -25,7 +25,7 @@ final class OrderRefundedSubtotalProvider implements OrderRefundedTotalProviderI
         $orderRefundedTotal = 0;
         /** @var RefundInterface $refund */
         foreach ($refunds as $refund) {
-            if ($refund->getType() !== RefundType::FEE) {
+            if ($refund->getType() !== RefundType::fee()) {
                 $orderRefundedTotal += $refund->getAmount();
             }
         }
