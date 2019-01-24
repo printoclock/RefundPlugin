@@ -9,6 +9,21 @@ sylius_refund_refund_units:
     defaults:
         _controller: Sylius\RefundPlugin\Action\Admin\RefundUnitsAction
 
+sylius_refund_refund_payment:
+    resource: |
+        alias: sylius_refund.refund_payment
+        section: admin
+        templates: SyliusAdminBundle:Crud
+        only: ['index']
+        grid: sylius_refund_refund_payment
+        permission: true
+        vars:
+            all:
+                subheader: sylius_refund.ui.manage_refund_payments
+            index:
+                icon: payment
+    type: sylius.resource
+
 sylius_refund_credit_memo:
     resource: |
         alias: sylius_refund.credit_memo
@@ -21,7 +36,7 @@ sylius_refund_credit_memo:
             all:
                 subheader: sylius_refund.ui.manage_credit_memos
             index:
-                icon: inbox
+                icon: file
     type: sylius.resource
 
 sylius_refund_order_credit_memos_list:

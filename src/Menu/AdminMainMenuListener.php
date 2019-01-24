@@ -15,11 +15,17 @@ final class AdminMainMenuListener
         $salesMenu = $event->getMenu()->getChild('sales');
 
         $salesMenu
+            ->addChild('refund_payments', [
+                'route' => 'sylius_refund_admin_refund_payment_index',
+            ])
+            ->setLabel('sylius_refund.ui.refund_payments')
+            ->setLabelAttribute('icon', 'payment');
+
+        $salesMenu
             ->addChild('credit_memos', [
                 'route' => 'sylius_refund_admin_credit_memo_index',
             ])
             ->setLabel('sylius_refund.ui.credit_memos')
-            ->setLabelAttribute('icon', 'inbox')
-        ;
+            ->setLabelAttribute('icon', 'file');
     }
 }

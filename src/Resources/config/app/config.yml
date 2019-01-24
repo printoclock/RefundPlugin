@@ -116,3 +116,42 @@ sylius_grid:
                 channel:
                     type: credit_memo_channel
                     label: sylius.ui.channel
+        sylius_refund_refund_payment:
+            driver:
+                name: doctrine/orm
+                options:
+                    class: Sylius\RefundPlugin\Entity\RefundPayment
+            sorting:
+                orderNumber: asc
+            fields:
+                orderNumber:
+                    type: string
+                    label: sylius_refund.ui.order_number
+                    sortable: ~
+                amount:
+                    type: twig
+                    label: sylius.ui.amount
+                    path: .
+                    sortable: amount
+                    options:
+                        template: '@SyliusRefundPlugin/Grid/Field/amount.html.twig'
+                createdAt:
+                    type: datetime
+                    label: sylius.ui.created_at
+                    options:
+                        format: 'Y-m-d H:i:s'
+                updatedAt:
+                    type: datetime
+                    label: sylius.ui.updated_at
+                    options:
+                        format: 'Y-m-d H:i:s'
+            filters:
+                orderNumber:
+                    type: string
+                    label: sylius_refund.ui.order_number
+                createdAt:
+                    type: date
+                    label: sylius.ui.created_at
+                updatedAt:
+                    type: date
+                    label: sylius.ui.updated_at
