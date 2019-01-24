@@ -54,6 +54,6 @@ class Refund implements RefundInterface
 
     public function getType(): RefundType
     {
-        return $this->type;
+        return (is_string($this->type)) ? new RefundType($this->type) : $this->type;
     }
 }

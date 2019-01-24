@@ -36,7 +36,7 @@
                 {% for unit in credit_memo.units %}
                     <tr>
                         <td class="single line credit-memo-unit-product-name">
-                            {% if unit.type == 'fee' %}
+                            {% if unit.type.__toString() == 'fee' %}
                                 {{ ('sylius.ui.credit_memo.fees.' ~ unit.productName)|trans }}
                             {% else %}
                                 {{ unit.productName }}
