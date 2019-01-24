@@ -8,12 +8,17 @@
             <argument type="service" id="sylius.repository.adjustment" />
         </service>
 
-        <service id="Sylius\RefundPlugin\Provider\OrderRefundedTotalProvider">
+        <service id="Sylius\RefundPlugin\Provider\OrderRefundedSubtotalProvider">
             <argument type="service" id="sylius_refund.repository.refund" />
             <argument type="service" id="sylius.repository.order_item_unit" />
         </service>
 
         <service id="Sylius\RefundPlugin\Provider\OrderRefundedFeeTotalProvider">
+            <argument type="service" id="sylius_refund.repository.refund" />
+            <argument type="service" id="sylius.repository.order_item_unit" />
+        </service>
+
+        <service id="Sylius\RefundPlugin\Provider\OrderRefundedTotalProvider">
             <argument type="service" id="sylius_refund.repository.refund" />
             <argument type="service" id="sylius.repository.order_item_unit" />
         </service>
