@@ -137,7 +137,7 @@ sylius_grid:
                         template: '@SyliusRefundPlugin/Grid/Field/amount.html.twig'
                 state:
                     type: twig
-                    label: sylius_refund.ui.state
+                    label: sylius.ui.state
                     sortable: ~
                     options:
                         template: '@SyliusRefundPlugin/Grid/Field/refund_payment_state.html.twig'

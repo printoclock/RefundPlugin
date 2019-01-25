@@ -1,4 +1,4 @@
-{% if data.state != 'sylius_refund.ui.completed'|trans %}
+{% if data.state != 'Completed' %}
     <form action="{{ path('sylius_refund_complete_refund_payment', {'orderNumber': data.orderNumber, 'id': data.id}) }}" method="POST">
         <button class="button ui labeled icon yellow">
             <i class="icon check"></i>
