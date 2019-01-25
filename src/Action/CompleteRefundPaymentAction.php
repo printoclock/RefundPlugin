@@ -46,7 +46,7 @@ final class CompleteRefundPaymentAction
         $this->orderRepository = $orderRepository;
     }
 
-    public function __invoke(Request $request, ?string $orderNumber, string $id): Response
+    public function __invoke(Request $request, string $orderNumber, string $id): Response
     {
         /** @var RefundPaymentInterface $refundPayment */
         $refundPayment = $this->refundPaymentRepository->find($id);
@@ -55,13 +55,15 @@ final class CompleteRefundPaymentAction
 
         $this->session->getFlashBag()->add('success', 'sylius_refund.refund_payment_completed');
 
-        if ($orderNumber !== null) {
-            /** @var OrderInterface $order */
-            $order = $this->orderRepository->findOneByNumber($orderNumber);
+        $redirectToIndex = (bool) ($request->get('redirectToIndex', false));
 
-            return new RedirectResponse($this->router->generate('sylius_admin_order_show', ['id' => $order->getId()]));
+        if ($redirectToIndex) {
+            return new RedirectResponse($this->router->generate('sylius_refund_admin_refund_payment_index'));
         }
 
-        return new RedirectResponse($this->router->generate('sylius_refund_admin_refund_payment_index'));
+        /** @var OrderInterface $order */
+        $order = $this->orderRepository->findOneByNumber($orderNumber);
+
+        return new RedirectResponse($this->router->generate('sylius_admin_order_show', ['id' => $order->getId()]));
     }
 }
