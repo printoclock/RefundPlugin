@@ -8,9 +8,11 @@ sylius_refund:
         issued_for_order: Emise pour la commande
         issued_from: Emise par
         manage_credit_memos: Gérer les factures d'avoir
+        manage_refund_payments: Gérer les paiements de remboursement
         order_number: Numéro de commande
         partial_refund: Remboursement partiel
         refund_all: Tout rembourser
+        refund_payment: Paiement de remboursement
         refund_payment_completed: Remboursement terminé avec succès
         refund_payments: Paiements de remboursement
         refunded: Remboursé

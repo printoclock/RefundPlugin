@@ -98,9 +98,10 @@
                         {% endfor %}
                         {% if order.getAdjustments('shipping')|length > 0 %}
                             {% set shipment = order.getAdjustments('shipping').first() %}
+                            {% set shipmentSubtotal = order.getAdjustmentsTotal('shipping') %}
                             {% set shipmentPromotionTotal = order.getAdjustmentsTotal('order_shipping_promotion') %}
                             {% set shipmentTaxTotal = order.getAdjustmentsTotal('tax') %}
-                            {% set shipmentTotal = shipment.amount + shipmentPromotionTotal + shipmentTaxTotal %}
+                            {% set shipmentTotal = shipmentSubtotal + shipmentPromotionTotal + shipmentTaxTotal %}
                             <tr class="shipment">
                                 <td class="single line">
                                     {{ 'sylius.ui.shipment'|trans }}: {{ shipment.label }}

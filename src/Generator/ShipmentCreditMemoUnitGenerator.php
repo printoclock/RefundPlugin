@@ -32,9 +32,10 @@ final class ShipmentCreditMemoUnitGenerator implements CreditMemoUnitGeneratorIn
         /** @var OrderInterface $order */
         $order = $shippingAdjustment->getAdjustable();
 
+        $shippingSubtotal = $order->getAdjustmentsTotal(AdjustmentInterface::SHIPPING_ADJUSTMENT);
         $shippingPromotionTotal = $order->getAdjustmentsTotal(AdjustmentInterface::ORDER_SHIPPING_PROMOTION_ADJUSTMENT);
         $shippingTaxTotal = $order->getAdjustmentsTotal(AdjustmentInterface::TAX_ADJUSTMENT);
-        $shippingTotal = $shippingAdjustment->getAmount() + $shippingPromotionTotal + $shippingTaxTotal;
+        $shippingTotal = $shippingSubtotal + $shippingPromotionTotal + $shippingTaxTotal;
 
         Assert::lessThanEq($amount, $shippingTotal);
 

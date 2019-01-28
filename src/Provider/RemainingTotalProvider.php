@@ -70,10 +70,11 @@ final class RemainingTotalProvider implements RemainingTotalProviderInterface
             /** @var OrderInterface $order */
             $order = $shipment->getAdjustable();
 
+            $shippingSubtotal = $order->getAdjustmentsTotal(AdjustmentInterface::SHIPPING_ADJUSTMENT);
             $shippingPromotionTotal = $order->getAdjustmentsTotal(AdjustmentInterface::ORDER_SHIPPING_PROMOTION_ADJUSTMENT);
             $shippingTaxTotal = $order->getAdjustmentsTotal(AdjustmentInterface::TAX_ADJUSTMENT);
 
-            return $shipment->getAmount() + $shippingPromotionTotal + $shippingTaxTotal;
+            return $shippingSubtotal + $shippingPromotionTotal + $shippingTaxTotal;
         }
 
         return 0;
