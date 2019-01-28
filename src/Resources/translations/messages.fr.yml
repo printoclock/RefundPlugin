@@ -1,25 +1,25 @@
 sylius_refund:
     ui:
-        completed: Completed
-        credit_memo: Credit memo
-        credit_memos: Credit memos
-        download: Download
-        issued_at: Issued at
-        issued_for_order: Issued for order
-        issued_from: Issued from
-        manage_credit_memos: Manage credit memos
-        order_number: Order number
-        partial_refund: Partial refund
-        refund_all: Refund all
-        refund_payment_completed: Refund payment completed sucessfully
-        refund_payments: Refund payments
-        refunded: Refunded
-        refunded_fee_total: Refund fees
-        refunded_subtotal: Refunded subtotal
-        refunded_total: Refunded total
-        refunds: Refunds
+        completed: Complété
+        credit_memo: Facture d'avoir
+        credit_memos: Factures d'avoir
+        download: Télécharer
+        issued_at: Emise le
+        issued_for_order: Emise pour la commande
+        issued_from: Emise par
+        manage_credit_memos: Gérer les factures d'avoir
+        order_number: Numéro de commande
+        partial_refund: Remboursement partiel
+        refund_all: Tout rembourser
+        refund_payment_completed: Remboursement terminé avec succès
+        refund_payments: Paiements de remboursement
+        refunded: Remboursé
+        refunded_fee_total: Frais de remboursements
+        refunded_subtotal: Sous-total remboursé
+        refunded_total: Total remboursé
+        refunds: Remboursements
 
 sylius:
     ui:
-        fully_refunded: Fully refunded
-        original_payment_method: Original Payment Method
+        fully_refunded: Remboursé
+        original_payment_method: Méthode de paiement initiale

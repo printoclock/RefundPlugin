@@ -14,10 +14,12 @@ sylius_refund:
         refund_payment_completed: Refund payment completed sucessfully
         refund_payments: Refund payments
         refunded: Refunded
+        refunded_fee_total: Refund fees
+        refunded_subtotal: Refunded subtotal
         refunded_total: Refunded total
         refunds: Refunds
 
 sylius:
     ui:
-        fully_refunded: 'Fully refunded'
-        original_payment_method: "Original Payment Method"
+        fully_refunded: Fully refunded
+        original_payment_method: Original Payment Method
