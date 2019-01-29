@@ -65,7 +65,7 @@
         </service>
 
         <service id="Sylius\RefundPlugin\Checker\OrderFullyRefundedTotalChecker">
-            <argument type="service" id="Sylius\RefundPlugin\Provider\OrderRefundedTotalProvider" />
+            <argument type="service" id="Sylius\RefundPlugin\Provider\OrderRefundedSubtotalProvider" />
         </service>
 
         <service id="sylius_refund_plugin.block_event_listener.order_show.credit_memos" class="Sylius\Bundle\UiBundle\Block\BlockEventListener">
