@@ -4,6 +4,10 @@
     <services>
         <defaults autowire="false" autoconfigure="false" public="true" />
 
+        <service id="Sylius\RefundPlugin\Provider\RefundPaymentProvider">
+            <argument type="service" id="sylius_refund.repository.refund_payment" />
+        </service>
+
         <service id="Sylius\RefundPlugin\Provider\RefundedShipmentFeeProvider">
             <argument type="service" id="sylius.repository.adjustment" />
         </service>

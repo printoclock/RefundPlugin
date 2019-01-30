@@ -49,6 +49,7 @@ final class RefundPaymentProcessManager
         $refundPayment = $this->refundPaymentFactory->createWithData(
             $event->orderNumber(),
             $event->amount(),
+            $event->feeAmount(),
             $event->currencyCode(),
             RefundPaymentInterface::STATE_NEW,
             $event->paymentMethodId()
@@ -61,11 +62,10 @@ final class RefundPaymentProcessManager
             $refundPayment->getId(),
             $event->orderNumber(),
             $event->amount(),
+            $event->feeAmount(),
             $event->currencyCode(),
             $event->paymentMethodId(),
             $this->relatedPaymentIdProvider->getForRefundPayment($refundPayment)
         ));
-
-        $this->orderFullyRefundedStateResolver->resolve($event->orderNumber());
     }
 }

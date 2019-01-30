@@ -18,6 +18,9 @@ class RefundPayment implements RefundPaymentInterface
     /** @var int */
     private $amount;
 
+    /** @var int */
+    private $feeAmount;
+
     /** @var string */
     private $currencyCode;
 
@@ -36,12 +39,14 @@ class RefundPayment implements RefundPaymentInterface
     public function __construct(
         string $orderNumber,
         int $amount,
+        int $feeAmount,
         string $currencyCode,
         string $state,
         PaymentMethodInterface $paymentMethod
     ) {
         $this->orderNumber = $orderNumber;
         $this->amount = $amount;
+        $this->feeAmount = $feeAmount;
         $this->currencyCode = $currencyCode;
         $this->state = $state;
         $this->paymentMethod = $paymentMethod;
@@ -55,6 +60,11 @@ class RefundPayment implements RefundPaymentInterface
     public function getAmount(): int
     {
         return $this->amount;
+    }
+
+    public function getFeeAmount(): int
+    {
+        return $this->feeAmount;
     }
 
     public function getCurrencyCode(): string

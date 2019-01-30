@@ -28,6 +28,9 @@ final class UnitsRefunded
     /** @var int */
     private $amount;
 
+    /** @var int */
+    private $feeAmount;
+
     /** @var string */
     private $currencyCode;
 
@@ -41,6 +44,7 @@ final class UnitsRefunded
         array $fees,
         int $paymentMethodId,
         int $amount,
+        int $feeAmount,
         string $currencyCode,
         string $comment
     ) {
@@ -50,6 +54,7 @@ final class UnitsRefunded
         $this->fees = $fees;
         $this->paymentMethodId = $paymentMethodId;
         $this->amount = $amount;
+        $this->feeAmount = $feeAmount;
         $this->currencyCode = $currencyCode;
         $this->comment = $comment;
     }
@@ -85,6 +90,11 @@ final class UnitsRefunded
     public function amount(): int
     {
         return $this->amount;
+    }
+
+    public function feeAmount(): int
+    {
+        return $this->feeAmount;
     }
 
     public function currencyCode(): string

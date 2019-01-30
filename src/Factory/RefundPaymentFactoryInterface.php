@@ -11,6 +11,7 @@ interface RefundPaymentFactoryInterface
     public function createWithData(
         string $orderNumber,
         int $amount,
+        int $feeAmount,
         string $currencyCode,
         string $state,
         int $paymentMethodId

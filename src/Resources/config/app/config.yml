@@ -25,25 +25,24 @@ framework:
                 default_middleware: allow_no_handlers
 
 winzou_state_machine:
-    sylius_order:
-        states:
-            fully_refunded: ~
-        transitions:
-            refund:
-                from: [new, fulfilled]
-                to: fully_refunded
     sylius_refund_refund_payment:
         class: Sylius\RefundPlugin\Entity\RefundPayment
         property_path: state
         graph: sylius_refund_refund_payment
         state_machine_class: "%sylius.state_machine.class%"
         states:
-            New: ~
-            Completed: ~
+            new: ~
+            completed: ~
         transitions:
             complete:
-                from: [New]
-                to: Completed
+                from: [new]
+                to: completed
+        callbacks:
+            after:
+                resolve_order_payment_state:
+                    on: ['complete']
+                    do: ['@Sylius\RefundPlugin\StateResolver\OrderPaymentStateResolver', 'resolve']
+                    args: ['object.getOrderNumber()']
 
 sylius_grid:
     templates:

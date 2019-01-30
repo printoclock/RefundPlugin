@@ -15,6 +15,9 @@ final class RefundPaymentGenerated
     /** @var int */
     private $amount;
 
+    /** @var int */
+    private $feeAmount;
+
     /** @var string */
     private $currencyCode;
 
@@ -28,6 +31,7 @@ final class RefundPaymentGenerated
         int $id,
         string $orderNumber,
         int $amount,
+        int $feeAmount,
         string $currencyCode,
         int $paymentMethodId,
         int $paymentId
@@ -35,6 +39,7 @@ final class RefundPaymentGenerated
         $this->id = $id;
         $this->orderNumber = $orderNumber;
         $this->amount = $amount;
+        $this->feeAmount = $feeAmount;
         $this->currencyCode = $currencyCode;
         $this->paymentMethodId = $paymentMethodId;
         $this->paymentId = $paymentId;
@@ -53,6 +58,11 @@ final class RefundPaymentGenerated
     public function amount(): int
     {
         return $this->amount;
+    }
+
+    public function feeAmount(): int
+    {
+        return $this->feeAmount;
     }
 
     public function currencyCode(): string
