@@ -43,7 +43,7 @@
                             {% endif %}
                         </td>
                         <td class="right aligned credit-memo-unit-taxes-total">
-                            {{ money.format(unit.taxesTotal, credit_memo.currencyCode) }}
+                            {{ money.format(unit.taxTotal, credit_memo.currencyCode) }}
                         </td>
                         <td class="right aligned credit-memo-unit-total">
                             {{ money.format(unit.total, credit_memo.currencyCode) }}

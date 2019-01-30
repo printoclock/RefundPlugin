@@ -31,7 +31,7 @@
                 {% endif %}
             </td>
             <td>
-                {{ unit.taxesTotal|sylius_format_money(creditMemo.currencyCode, creditMemo.localeCode) }}
+                {{ unit.taxTotal|sylius_format_money(creditMemo.currencyCode, creditMemo.localeCode) }}
             </td>
             <td>
                 {{ unit.total|sylius_format_money(creditMemo.currencyCode, creditMemo.localeCode) }}
