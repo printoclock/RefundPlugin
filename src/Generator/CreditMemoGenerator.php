@@ -23,7 +23,7 @@ final class CreditMemoGenerator implements CreditMemoGeneratorInterface
     /** @var OrderRepositoryInterface */
     private $orderRepository;
 
-    /** @var InvoiceRepositoryInterface */
+    /** @var InvoiceRepository */
     private $invoiceRepository;
 
     /** @var CreditMemoUnitGeneratorInterface */
@@ -46,7 +46,7 @@ final class CreditMemoGenerator implements CreditMemoGeneratorInterface
 
     public function __construct(
         OrderRepositoryInterface $orderRepository,
-        InvoiceRepositoryInterface $invoiceRepository,
+        InvoiceRepository $invoiceRepository,
         CreditMemoUnitGeneratorInterface $orderItemUnitCreditMemoUnitGenerator,
         CreditMemoUnitGeneratorInterface $shipmentCreditMemoUnitGenerator,
         CreditMemoUnitGeneratorInterface $feeCreditMemoUnitGenerator,
