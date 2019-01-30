@@ -13,18 +13,34 @@ class CreditMemoUnit implements CreditMemoUnitInterface
     /** @var string */
     private $productName;
 
+    /** @var string|null */
+    private $variantCode;
+
+    /** @var array|null */
+    private $variantOptions;
+
+    /** @var string|null */
+    private $itemNumber;
+
+    /** @var int */
+    private $subtotal;
+
+    /** @var int */
+    private $taxTotal;
+
     /** @var int */
     private $total;
 
-    /** @var int */
-    private $taxesTotal;
-
-    public function __construct(string $type, string $productName, int $total, int $taxesTotal)
+    public function __construct(string $type, string $productName, ?string $variantCode, array $variantOptions, ?string $itemNumber, int $subtotal, int $taxTotal, int $total)
     {
         $this->type = $type;
         $this->productName = $productName;
+        $this->variantCode = $variantCode;
+        $this->variantOptions = $variantOptions;
+        $this->itemNumber = $itemNumber;
+        $this->subtotal = $subtotal;
+        $this->taxTotal = $taxTotal;
         $this->total = $total;
-        $this->taxesTotal = $taxesTotal;
     }
 
     public function getType(): string
@@ -37,14 +53,34 @@ class CreditMemoUnit implements CreditMemoUnitInterface
         return $this->productName;
     }
 
+    public function getVariantCode(): ?string
+    {
+        return $this->variantCode;
+    }
+
+    public function getVariantOptions(): array
+    {
+        return $this->variantOptions ?? [];
+    }
+
+    public function getItemNumber(): ?string
+    {
+        return $this->itemNumber;
+    }
+
+    public function getSubtotal(): int
+    {
+        return $this->subtotal;
+    }
+
+    public function getTaxTotal(): int
+    {
+        return $this->taxTotal;
+    }
+
     public function getTotal(): int
     {
         return $this->total;
-    }
-
-    public function getTaxesTotal(): int
-    {
-        return $this->taxesTotal;
     }
 
     public function serialize(): string
@@ -52,8 +88,12 @@ class CreditMemoUnit implements CreditMemoUnitInterface
         $serialized = json_encode([
             'type' => $this->type,
             'product_name' => $this->productName,
+            'variant_code' => $this->variantCode,
+            'variant_options' => $this->variantOptions,
+            'item_number' => $this->itemNumber,
+            'subtotal' => $this->subtotal,
+            'tax_total' => $this->taxTotal,
             'total' => $this->total,
-            'taxes_total' => $this->taxesTotal,
         ]);
 
         if ($serialized === false) {
@@ -70,8 +110,12 @@ class CreditMemoUnit implements CreditMemoUnitInterface
         return new self(
             $data['type'],
             $data['product_name'],
-            $data['total'],
-            $data['taxes_total']
+            $data['variant_code'],
+            $data['variant_options'],
+            $data['item_number'],
+            $data['subtotal'],
+            $data['tax_total'],
+            $data['total']
         );
     }
 }

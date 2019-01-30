@@ -18,6 +18,8 @@
         <field name="localeCode" />
         <field name="comment" type="text" />
         <field name="issuedAt" column="issued_at" type="datetime" nullable="true" />
+        <field name="billingData" />
+        <field name="shopBillingData" />
 
         <embedded name="channel" class="Sylius\RefundPlugin\Entity\CreditMemoChannel" />
 

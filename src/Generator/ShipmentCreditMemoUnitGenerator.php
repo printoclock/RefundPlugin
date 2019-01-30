@@ -39,20 +39,17 @@ final class ShipmentCreditMemoUnitGenerator implements CreditMemoUnitGeneratorIn
 
         Assert::lessThanEq($amount, $shippingTotal);
 
-        if ($amount === $shippingTotal) {
-            return new CreditMemoUnit(
-                RefundType::SHIPMENT,
-                $shippingAdjustment->getLabel(),
-                $shippingTotal,
-                $shippingTaxTotal
-            );
-        }
+        $shippingTaxTotal = ($amount === $shippingTotal) ? $shippingTaxTotal : (int) ($shippingTaxTotal * ($amount / $shippingTotal));
 
         return new CreditMemoUnit(
             RefundType::SHIPMENT,
             $shippingAdjustment->getLabel(),
-            $amount,
-            (int) ($shippingTaxTotal * ($amount / $shippingTotal))
+            null,
+            [],
+            null,
+            $amount - $shippingTaxTotal,
+            $shippingTaxTotal,
+            $amount
         );
     }
 }

@@ -37,6 +37,12 @@ class CreditMemo implements CreditMemoInterface
     /** @var \DateTimeInterface */
     private $issuedAt;
 
+    /** @var string */
+    private $billingData;
+
+    /** @var string */
+    private $shopBillingData;
+
     public function __construct(
         string $id,
         string $number,
@@ -47,7 +53,9 @@ class CreditMemo implements CreditMemoInterface
         CreditMemoChannel $channel,
         array $units,
         string $comment,
-        \DateTimeInterface $issuedAt
+        \DateTimeInterface $issuedAt,
+        string $billingData,
+        string $shopBillingData
     ) {
         $this->id = $id;
         $this->number = $number;
@@ -59,6 +67,8 @@ class CreditMemo implements CreditMemoInterface
         $this->units = $units;
         $this->comment = $comment;
         $this->issuedAt = $issuedAt;
+        $this->billingData = $billingData;
+        $this->shopBillingData = $shopBillingData;
     }
 
     public function getId(): string
@@ -114,5 +124,15 @@ class CreditMemo implements CreditMemoInterface
     public function getIssuedAt(): \DateTimeInterface
     {
         return $this->issuedAt;
+    }
+
+    public function getBillingData(): CreditMemoBillingData
+    {
+        return CreditMemoBillingData::unserialize($this->billingData);
+    }
+
+    public function getShopBillingData(): CreditMemoBillingData
+    {
+        return CreditMemoBillingData::unserialize($this->shopBillingData);
     }
 }

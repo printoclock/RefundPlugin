@@ -10,9 +10,17 @@ interface CreditMemoUnitInterface
 
     public function getProductName(): string;
 
-    public function getTotal(): int;
+    public function getVariantCode(): ?string;
 
-    public function getTaxesTotal(): int;
+    public function getVariantOptions(): array;
+
+    public function getItemNumber(): ?string;
+
+    public function getSubtotal(): int;
+
+    public function getTaxTotal(): int;
+
+    public function getTotal(): int;
 
     public function serialize(): string;
 }

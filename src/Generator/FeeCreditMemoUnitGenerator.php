@@ -28,6 +28,10 @@ final class FeeCreditMemoUnitGenerator implements CreditMemoUnitGeneratorInterfa
             return new CreditMemoUnit(
                 RefundType::FEE,
                 strval($unitId),
+                null,
+                [],
+                null,
+                0,
                 0,
                 0
             );
@@ -40,12 +44,17 @@ final class FeeCreditMemoUnitGenerator implements CreditMemoUnitGeneratorInterfa
         Assert::notNull($orderItemUnit);
 
         $taxRate = $orderItemUnit->getTaxTotal() / (float) ($orderItemUnit->getTotal() - $orderItemUnit->getTaxTotal());
+        $taxTotal = (int) (($amount / (1 + $taxRate)) * $taxRate);
 
         return new CreditMemoUnit(
             RefundType::FEE,
             strval($unitId),
-            $amount,
-            (int) (($amount / (1 + $taxRate)) * $taxRate)
+            null,
+            [],
+            null,
+            $amount - $taxTotal,
+            $taxTotal,
+            $amount
         );
     }
 }

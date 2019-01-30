@@ -7,9 +7,13 @@ namespace Sylius\RefundPlugin\Generator;
 use Sylius\Component\Core\Model\ChannelInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Repository\OrderRepositoryInterface;
+use Sylius\InvoicingPlugin\Entity\Invoice;
+use Sylius\InvoicingPlugin\Repository\InvoiceRepository;
 use Sylius\RefundPlugin\Entity\CreditMemo;
+use Sylius\RefundPlugin\Entity\CreditMemoBillingData;
 use Sylius\RefundPlugin\Entity\CreditMemoChannel;
 use Sylius\RefundPlugin\Entity\CreditMemoInterface;
+use Sylius\RefundPlugin\Exception\InvoiceNotFound;
 use Sylius\RefundPlugin\Exception\OrderNotFound;
 use Sylius\RefundPlugin\Model\UnitRefundInterface;
 use Sylius\RefundPlugin\Provider\CurrentDateTimeProviderInterface;
@@ -18,6 +22,9 @@ final class CreditMemoGenerator implements CreditMemoGeneratorInterface
 {
     /** @var OrderRepositoryInterface */
     private $orderRepository;
+
+    /** @var InvoiceRepositoryInterface */
+    private $invoiceRepository;
 
     /** @var CreditMemoUnitGeneratorInterface */
     private $orderItemUnitCreditMemoUnitGenerator;
@@ -39,6 +46,7 @@ final class CreditMemoGenerator implements CreditMemoGeneratorInterface
 
     public function __construct(
         OrderRepositoryInterface $orderRepository,
+        InvoiceRepositoryInterface $invoiceRepository,
         CreditMemoUnitGeneratorInterface $orderItemUnitCreditMemoUnitGenerator,
         CreditMemoUnitGeneratorInterface $shipmentCreditMemoUnitGenerator,
         CreditMemoUnitGeneratorInterface $feeCreditMemoUnitGenerator,
@@ -47,6 +55,7 @@ final class CreditMemoGenerator implements CreditMemoGeneratorInterface
         CreditMemoIdentifierGeneratorInterface $uuidCreditMemoIdentifierGenerator
     ) {
         $this->orderRepository = $orderRepository;
+        $this->invoiceRepository = $invoiceRepository;
         $this->orderItemUnitCreditMemoUnitGenerator = $orderItemUnitCreditMemoUnitGenerator;
         $this->shipmentCreditMemoUnitGenerator = $shipmentCreditMemoUnitGenerator;
         $this->feeCreditMemoUnitGenerator = $feeCreditMemoUnitGenerator;
@@ -65,8 +74,16 @@ final class CreditMemoGenerator implements CreditMemoGeneratorInterface
     ): CreditMemoInterface {
         /** @var OrderInterface|null $order */
         $order = $this->orderRepository->findOneByNumber($orderNumber);
+
         if ($order === null) {
             throw OrderNotFound::withNumber($orderNumber);
+        }
+
+        /** @var Invoice|null $invoice */
+        $invoice = $this->invoiceRepository->getOneByOrderNumber($orderNumber);
+
+        if ($invoice === null) {
+            throw InvoiceNotFound::withNumber($orderNumber);
         }
 
         /** @var ChannelInterface $channel */
@@ -95,6 +112,30 @@ final class CreditMemoGenerator implements CreditMemoGeneratorInterface
                 ->serialize();
         }
 
+        $invoiceBillingData = $invoice->billingData();
+        $billingData = new CreditMemoBillingData(
+            $invoiceBillingData->firstName(),
+            $invoiceBillingData->lastName(),
+            null,
+            null,
+            $invoiceBillingData->street(),
+            $invoiceBillingData->postcode(),
+            $invoiceBillingData->city(),
+            $invoiceBillingData->countryCode()
+        );
+
+        $invoiceShopBillingData = $invoice->shopBillingData();
+        $shopBillingData = new CreditMemoBillingData(
+            null,
+            null,
+            $invoiceShopBillingData->getCompany(),
+            $invoiceShopBillingData->getTaxId(),
+            $invoiceShopBillingData->getStreet(),
+            $invoiceShopBillingData->getPostcode(),
+            $invoiceShopBillingData->getCity(),
+            $invoiceShopBillingData->getCountryCode()
+        );
+
         return new CreditMemo(
             $this->uuidCreditMemoIdentifierGenerator->generate(),
             $this->creditMemoNumberGenerator->generate(),
@@ -105,7 +146,9 @@ final class CreditMemoGenerator implements CreditMemoGeneratorInterface
             new CreditMemoChannel($channel->getCode(), $channel->getName(), $channel->getColor()),
             $creditMemoUnits,
             $comment,
-            $this->currentDateTimeProvider->now()
+            $this->currentDateTimeProvider->now(),
+            $billingData->serialize(),
+            $shopBillingData->serialize()
         );
     }
 }

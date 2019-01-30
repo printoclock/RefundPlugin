@@ -31,22 +31,20 @@ final class OrderItemUnitCreditMemoUnitGenerator implements CreditMemoUnitGenera
 
         /** @var OrderItemInterface $orderItem */
         $orderItem = $orderItemUnit->getOrderItem();
-        $total = $orderItemUnit->getTotal();
 
-        if ($amount === $total) {
-            return new CreditMemoUnit(
-                RefundType::ORDER_ITEM_UNIT,
-                $orderItem->getProductName(),
-                $total,
-                $orderItemUnit->getTaxTotal()
-            );
-        }
+        $variant = $orderItem->getVariant();
+
+        $taxTotal = ($amount === $orderItemUnit->getTotal()) ? $orderItemUnit->getTaxTotal() : (int) ($orderItemUnit->getTaxTotal() * ($amount / $orderItemUnit->getTotal()));
 
         return new CreditMemoUnit(
             RefundType::ORDER_ITEM_UNIT,
             $orderItem->getProductName(),
-            $amount,
-            (int) ($orderItemUnit->getTaxTotal() * ($amount / $total))
+            ($variant !== null) ? $variant->getCode() : null,
+            ($variant !== null) ? $variant->getOptionNameValueAsArray() : [],
+            $orderItem->getNumber(),
+            $amount - $taxTotal,
+            $taxTotal,
+            $amount
         );
     }
 }
