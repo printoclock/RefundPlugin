@@ -15,7 +15,8 @@
 
         <field name="orderNumber" column="order_number"/>
         <field name="amount" type="integer" />
-        <field name="currencyCode" column="currency_code"/>
+        <field name="feeAmount" type="integer" />
+        <field name="curencyCode" column="currency_code"/>
         <field name="state" />
 
         <field name="createdAt" column="created_at" type="datetime">
