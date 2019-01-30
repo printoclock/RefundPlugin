@@ -42,7 +42,7 @@ winzou_state_machine:
                 resolve_order_payment_state:
                     on: ['complete']
                     do: ['@Sylius\RefundPlugin\StateResolver\OrderPaymentStateResolver', 'resolve']
-                    args: ['object.getOrderNumber()']
+                    args: ['object.getOrderNumber()', 'object']
 
 sylius_grid:
     templates:

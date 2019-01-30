@@ -9,6 +9,7 @@ use SM\Factory\FactoryInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Repository\OrderRepositoryInterface;
 use Sylius\RefundPlugin\Checker\OrderFullyRefundedTotalCheckerInterface;
+use Sylius\RefundPlugin\Entity\RefundPayment;
 use Sylius\RefundPlugin\Provider\RefundPaymentProviderInterface;
 use Webmozart\Assert\Assert;
 
@@ -38,13 +39,13 @@ final class OrderPaymentStateResolver implements OrderPaymentStateResolverInterf
         $this->orderRepository = $orderRepository;
     }
 
-    public function resolve(string $orderNumber): void
+    public function resolve(string $orderNumber, ?RefundPayment $payment = null): void
     {
         /** @var OrderInterface $order */
         $order = $this->orderRepository->findOneByNumber($orderNumber);
         Assert::notNull($order);
 
-        $refundedTotal = $this->refundPaymentProvider->__invoke($orderNumber);
+        $refundedTotal = $this->refundPaymentProvider->__invoke($orderNumber, true, $payment);
 
         if ($refundedTotal === 0) return;
 
