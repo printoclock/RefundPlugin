@@ -116,6 +116,22 @@ class CreditMemo implements CreditMemoInterface
         return $units;
     }
 
+    public function getUnitsSubtotal(): int {
+        return array_reduce(array_map(function (CreditMemoUnit $unit) {
+            return $unit->getSubtotal();
+        }, $this->getUnits()), function ($a, $b) {
+            return $a + $b;
+        }, 0);
+    }
+
+    public function getUnitsTaxTotal(): int {
+        return array_reduce(array_map(function (CreditMemoUnit $unit) {
+            return $unit->getTaxTotal();
+        }, $this->getUnits()), function ($a, $b) {
+            return $a + $b;
+        }, 0);
+    }
+
     public function getComment(): string
     {
         return $this->comment;
