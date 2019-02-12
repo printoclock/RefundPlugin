@@ -65,6 +65,7 @@ final class CreditMemoGenerator implements CreditMemoGeneratorInterface
     }
 
     public function generate(
+        string $token,
         string $orderNumber,
         int $total,
         array $units,
@@ -138,6 +139,7 @@ final class CreditMemoGenerator implements CreditMemoGeneratorInterface
 
         return new CreditMemo(
             $this->uuidCreditMemoIdentifierGenerator->generate(),
+            $token,
             $this->creditMemoNumberGenerator->generate(),
             $orderNumber,
             $total,

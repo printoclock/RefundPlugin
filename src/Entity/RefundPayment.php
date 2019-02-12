@@ -13,6 +13,9 @@ class RefundPayment implements RefundPaymentInterface
     private $id;
 
     /** @var string */
+    private $token;
+
+    /** @var string */
     private $orderNumber;
 
     /** @var int */
@@ -36,20 +39,42 @@ class RefundPayment implements RefundPaymentInterface
     /** @var PaymentMethodInterface */
     private $paymentMethod;
 
+    /** @var string|null */
+    private $reference;
+
+    /** @var string|null */
+    private $comment;
+
     public function __construct(
+        string $token,
         string $orderNumber,
         int $amount,
         int $feeAmount,
         string $currencyCode,
         string $state,
-        PaymentMethodInterface $paymentMethod
+        PaymentMethodInterface $paymentMethod,
+        ?string $reference = null,
+        ?string $comment = null
     ) {
+        $this->token = $token;
         $this->orderNumber = $orderNumber;
         $this->amount = $amount;
         $this->feeAmount = $feeAmount;
         $this->currencyCode = $currencyCode;
         $this->state = $state;
         $this->paymentMethod = $paymentMethod;
+        $this->reference = $reference;
+        $this->comment = $comment;
+    }
+
+    public function getToken(): string
+    {
+        return $this->token;
+    }
+
+    public function setToken(string $token): void
+    {
+        $this->token = $token;
     }
 
     public function getOrderNumber(): string
@@ -110,5 +135,25 @@ class RefundPayment implements RefundPaymentInterface
     public function getPaymentMethod(): PaymentMethodInterface
     {
         return $this->paymentMethod;
+    }
+
+    public function getReference(): ?string
+    {
+        return $this->reference;
+    }
+
+    public function setReference(?string $reference): void
+    {
+        $this->reference = $reference;
+    }
+
+    public function getComment(): ?string
+    {
+        return $this->comment;
+    }
+
+    public function setComment(?string $comment): void
+    {
+        $this->comment = $comment;
     }
 }

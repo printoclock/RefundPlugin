@@ -8,6 +8,8 @@ use Sylius\Component\Resource\Model\ResourceInterface;
 
 interface CreditMemoInterface extends ResourceInterface
 {
+    public function getToken(): string;
+
     public function getNumber(): string;
 
     public function getOrderNumber(): string;

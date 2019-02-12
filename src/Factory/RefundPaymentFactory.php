@@ -20,16 +20,19 @@ final class RefundPaymentFactory implements RefundPaymentFactoryInterface
     }
 
     public function createWithData(
+        string $token,
         string $orderNumber,
         int $amount,
         int $feeAmount,
         string $currencyCode,
         string $state,
-        int $paymentMethodId
+        int $paymentMethodId,
+        ?string $reference = null,
+        ?string $comment = null
     ): RefundPaymentInterface {
         /** @var PaymentMethodInterface $paymentMethod */
         $paymentMethod = $this->paymentMethodRepository->find($paymentMethodId);
 
-        return new RefundPayment($orderNumber, $amount, $feeAmount, $currencyCode, $state, $paymentMethod);
+        return new RefundPayment($token, $orderNumber, $amount, $feeAmount, $currencyCode, $state, $paymentMethod, $reference, $comment);
     }
 }

@@ -9,6 +9,7 @@ use Sylius\RefundPlugin\Entity\CreditMemoInterface;
 interface CreditMemoGeneratorInterface
 {
     public function generate(
+        string $token,
         string $orderNumber,
         int $total,
         array $units,

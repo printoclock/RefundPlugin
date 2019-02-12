@@ -47,12 +47,15 @@ final class RefundPaymentProcessManager
     public function __invoke(UnitsRefunded $event): void
     {
         $refundPayment = $this->refundPaymentFactory->createWithData(
+            $event->token(),
             $event->orderNumber(),
             $event->amount(),
             $event->feeAmount(),
             $event->currencyCode(),
             RefundPaymentInterface::STATE_NEW,
-            $event->paymentMethodId()
+            $event->paymentMethodId(),
+            $event->reference(),
+            $event->comment()
         );
 
         $this->entityManager->persist($refundPayment);
@@ -60,12 +63,15 @@ final class RefundPaymentProcessManager
 
         $this->eventBus->dispatch(new RefundPaymentGenerated(
             $refundPayment->getId(),
+            $event->token(),
             $event->orderNumber(),
             $event->amount(),
             $event->feeAmount(),
             $event->currencyCode(),
             $event->paymentMethodId(),
-            $this->relatedPaymentIdProvider->getForRefundPayment($refundPayment)
+            $this->relatedPaymentIdProvider->getForRefundPayment($refundPayment),
+            $event->reference(),
+            $event->comment()
         ));
     }
 }

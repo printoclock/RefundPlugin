@@ -25,7 +25,10 @@ final class RefundUnits
     /** @var int */
     private $paymentMethodId;
 
-    /** @var string */
+    /** @var string|null */
+    private $reference;
+
+    /** @var string|null */
     private $comment;
 
     public function __construct(
@@ -34,14 +37,15 @@ final class RefundUnits
         array $shipments,
         array $fees,
         int $paymentMethodId,
-        string $comment
-    )
-    {
+        ?string $reference = null,
+        ?string $comment = null
+    ) {
         $this->orderNumber = $orderNumber;
         $this->units = $units;
         $this->shipments = $shipments;
         $this->fees = $fees;
         $this->paymentMethodId = $paymentMethodId;
+        $this->reference = $reference;
         $this->comment = $comment;
     }
 
@@ -73,7 +77,12 @@ final class RefundUnits
         return $this->paymentMethodId;
     }
 
-    public function comment(): string
+    public function reference(): ?string
+    {
+        return $this->reference;
+    }
+
+    public function comment(): ?string
     {
         return $this->comment;
     }

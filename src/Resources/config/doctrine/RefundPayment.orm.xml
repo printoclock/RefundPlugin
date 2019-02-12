@@ -13,11 +13,14 @@
             <generator strategy="AUTO" />
         </id>
 
+        <field name="token" />
         <field name="orderNumber" column="order_number"/>
         <field name="amount" type="integer" />
         <field name="feeAmount" type="integer" />
         <field name="currencyCode" column="currency_code"/>
         <field name="state" />
+        <field name="reference" nullable="true" />
+        <field name="comment" type="text" nullable="true" />
 
         <field name="createdAt" column="created_at" type="datetime">
             <gedmo:timestampable on="create"/>

@@ -11,6 +11,9 @@ use Sylius\RefundPlugin\Model\ShipmentRefund;
 final class GenerateCreditMemo
 {
     /** @var string */
+    private $token;
+
+    /** @var string */
     private $orderNumber;
 
     /** @var int */
@@ -29,6 +32,7 @@ final class GenerateCreditMemo
     private $comment;
 
     public function __construct(
+        string $token,
         string $orderNumber,
         int $total,
         array $units,
@@ -37,12 +41,18 @@ final class GenerateCreditMemo
         string $comment
     )
     {
+        $this->token = $token;
         $this->orderNumber = $orderNumber;
         $this->total = $total;
         $this->units = $units;
         $this->shipments = $shipments;
         $this->fees = $fees;
         $this->comment = $comment;
+    }
+
+    public function token(): string
+    {
+        return $this->token;
     }
 
     public function orderNumber(): string

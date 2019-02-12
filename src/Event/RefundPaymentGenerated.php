@@ -10,6 +10,9 @@ final class RefundPaymentGenerated
     private $id;
 
     /** @var string */
+    private $token;
+
+    /** @var string */
     private $orderNumber;
 
     /** @var int */
@@ -27,27 +30,44 @@ final class RefundPaymentGenerated
     /** @var int */
     private $paymentId;
 
+    /** @var string|null */
+    private $reference;
+
+    /** @var string|null */
+    private $comment;
+
     public function __construct(
         int $id,
+        string $token,
         string $orderNumber,
         int $amount,
         int $feeAmount,
         string $currencyCode,
         int $paymentMethodId,
-        int $paymentId
+        int $paymentId,
+        ?string $reference = null,
+        ?string $comment = null
     ) {
         $this->id = $id;
+        $this->token = $token;
         $this->orderNumber = $orderNumber;
         $this->amount = $amount;
         $this->feeAmount = $feeAmount;
         $this->currencyCode = $currencyCode;
         $this->paymentMethodId = $paymentMethodId;
         $this->paymentId = $paymentId;
+        $this->reference = $reference;
+        $this->comment = $comment;
     }
 
     public function id(): int
     {
         return $this->id;
+    }
+
+    public function token(): string
+    {
+        return $this->token;
     }
 
     public function orderNumber(): string
@@ -78,5 +98,15 @@ final class RefundPaymentGenerated
     public function paymentId(): int
     {
         return $this->paymentId;
+    }
+
+    public function reference(): ?string
+    {
+        return $this->reference;
+    }
+
+    public function comment(): ?string
+    {
+        return $this->comment;
     }
 }

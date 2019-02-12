@@ -12,6 +12,8 @@ interface RefundPaymentInterface extends ResourceInterface
     public const STATE_NEW = 'new';
     public const STATE_COMPLETED = 'completed';
 
+    public function getToken(): string;
+
     public function getOrderNumber(): string;
 
     public function getAmount(): int;
@@ -27,4 +29,8 @@ interface RefundPaymentInterface extends ResourceInterface
     public function getUpdatedAt(): ?\DateTimeInterface;
 
     public function getPaymentMethod(): PaymentMethodInterface;
+
+    public function getReference(): ?string;
+
+    public function getComment(): ?string;
 }

@@ -11,6 +11,9 @@ use Sylius\RefundPlugin\Model\ShipmentRefund;
 final class UnitsRefunded
 {
     /** @var string */
+    private $token;
+
+    /** @var string */
     private $orderNumber;
 
     /** @var array|OrderItemUnitRefund[] */
@@ -34,10 +37,14 @@ final class UnitsRefunded
     /** @var string */
     private $currencyCode;
 
-    /** @var string */
+    /** @var string|null */
+    private $reference;
+
+    /** @var string|null */
     private $comment;
 
     public function __construct(
+        string $token,
         string $orderNumber,
         array $units,
         array $shipments,
@@ -46,8 +53,10 @@ final class UnitsRefunded
         int $amount,
         int $feeAmount,
         string $currencyCode,
-        string $comment
+        ?string $reference = null,
+        ?string $comment = null
     ) {
+        $this->token = $token;
         $this->orderNumber = $orderNumber;
         $this->units = $units;
         $this->shipments = $shipments;
@@ -56,7 +65,13 @@ final class UnitsRefunded
         $this->amount = $amount;
         $this->feeAmount = $feeAmount;
         $this->currencyCode = $currencyCode;
+        $this->reference = $reference;
         $this->comment = $comment;
+    }
+
+    public function token(): string
+    {
+        return $this->token;
     }
 
     public function orderNumber(): string
@@ -102,7 +117,12 @@ final class UnitsRefunded
         return $this->currencyCode;
     }
 
-    public function comment(): string
+    public function reference(): ?string
+    {
+        return $this->reference;
+    }
+
+    public function comment(): ?string
     {
         return $this->comment;
     }

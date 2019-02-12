@@ -11,6 +11,9 @@ class CreditMemo implements CreditMemoInterface
     private $id;
 
     /** @var string */
+    private $token;
+
+    /** @var string */
     private $number;
 
     /** @var string */
@@ -45,6 +48,7 @@ class CreditMemo implements CreditMemoInterface
 
     public function __construct(
         string $id,
+        string $token,
         string $number,
         string $orderNumber,
         int $total,
@@ -58,6 +62,7 @@ class CreditMemo implements CreditMemoInterface
         string $shopBillingData
     ) {
         $this->id = $id;
+        $this->token = $token;
         $this->number = $number;
         $this->orderNumber = $orderNumber;
         $this->total = $total;
@@ -74,6 +79,16 @@ class CreditMemo implements CreditMemoInterface
     public function getId(): string
     {
         return $this->id;
+    }
+
+    public function getToken(): string
+    {
+        return $this->token;
+    }
+
+    public function setToken(string $token): void
+    {
+        $this->token = $token;
     }
 
     public function getNumber(): string

@@ -9,11 +9,14 @@ use Sylius\RefundPlugin\Entity\RefundPaymentInterface;
 interface RefundPaymentFactoryInterface
 {
     public function createWithData(
+        string $token,
         string $orderNumber,
         int $amount,
         int $feeAmount,
         string $currencyCode,
         string $state,
-        int $paymentMethodId
+        int $paymentMethodId,
+        ?string $reference = null,
+        ?string $comment = null
     ): RefundPaymentInterface;
 }
