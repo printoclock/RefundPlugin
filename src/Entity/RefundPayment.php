@@ -137,6 +137,11 @@ class RefundPayment implements RefundPaymentInterface
         return $this->paymentMethod;
     }
 
+    public function setPaymentMethod(PaymentMethodInterface $paymentMethod): void
+    {
+        $this->paymentMethod = $paymentMethod;
+    }
+
     public function getReference(): ?string
     {
         return $this->reference;
