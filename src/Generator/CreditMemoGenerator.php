@@ -85,21 +85,18 @@ final class CreditMemoGenerator implements CreditMemoGeneratorInterface
     ): CreditMemoInterface {
         /** @var OrderInterface|null $order */
         $order = $this->orderRepository->findOneByNumber($orderNumber);
-
         if ($order === null) {
             throw OrderNotFound::withNumber($orderNumber);
         }
 
         /** @var Invoice|null $invoice */
         $invoice = $this->invoiceRepository->getOneByOrderNumber($orderNumber);
-
         if ($invoice === null) {
             throw InvoiceNotFound::withNumber($orderNumber);
         }
 
-        /** @var PaymentMethod|null $invoice */
+        /** @var PaymentMethod|null $paymentMethod */
         $paymentMethod = $this->paymentMethodRepository->find($paymentMethodId);
-
         if ($paymentMethod === null) {
             throw PaymentMethodNotFound::withNumber($orderNumber);
         }
