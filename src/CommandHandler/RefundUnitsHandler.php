@@ -74,6 +74,7 @@ final class RefundUnitsHandler
             $refundedTotal,
             $refundedFeeTotal,
             $order->getCurrencyCode(),
+            $command->payedAt(),
             $command->reference(),
             $command->comment()
         ));

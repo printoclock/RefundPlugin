@@ -39,6 +39,9 @@ class RefundPayment implements RefundPaymentInterface
     /** @var PaymentMethodInterface */
     private $paymentMethod;
 
+    /** @var \DateTime|null */
+    private $payedAt;
+
     /** @var string|null */
     private $reference;
 
@@ -53,6 +56,7 @@ class RefundPayment implements RefundPaymentInterface
         string $currencyCode,
         string $state,
         PaymentMethodInterface $paymentMethod,
+        ?\DateTime $payedAt = null,
         ?string $reference = null,
         ?string $comment = null
     ) {
@@ -63,6 +67,7 @@ class RefundPayment implements RefundPaymentInterface
         $this->currencyCode = $currencyCode;
         $this->state = $state;
         $this->paymentMethod = $paymentMethod;
+        $this->payedAt = $payedAt;
         $this->reference = $reference;
         $this->comment = $comment;
     }
@@ -140,6 +145,16 @@ class RefundPayment implements RefundPaymentInterface
     public function setPaymentMethod(PaymentMethodInterface $paymentMethod): void
     {
         $this->paymentMethod = $paymentMethod;
+    }
+
+    public function getPayedAt(): ?\DateTime
+    {
+        return $this->payedAt;
+    }
+
+    public function setPayedAt(?\DateTime $payedAt): void
+    {
+        $this->payedAt = $payedAt;
     }
 
     public function getReference(): ?string

@@ -25,6 +25,9 @@ final class RefundUnits
     /** @var int */
     private $paymentMethodId;
 
+    /** @var \DateTime|null */
+    private $payedAt;
+
     /** @var string|null */
     private $reference;
 
@@ -37,6 +40,7 @@ final class RefundUnits
         array $shipments,
         array $fees,
         int $paymentMethodId,
+        ?\DateTime $payedAt = null,
         ?string $reference = null,
         ?string $comment = null
     ) {
@@ -45,6 +49,7 @@ final class RefundUnits
         $this->shipments = $shipments;
         $this->fees = $fees;
         $this->paymentMethodId = $paymentMethodId;
+        $this->payedAt = $payedAt;
         $this->reference = $reference;
         $this->comment = $comment;
     }
@@ -75,6 +80,11 @@ final class RefundUnits
     public function paymentMethodId(): int
     {
         return $this->paymentMethodId;
+    }
+
+    public function payedAt(): ?\DateTime
+    {
+        return $this->payedAt;
     }
 
     public function reference(): ?string

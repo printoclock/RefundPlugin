@@ -54,6 +54,7 @@ final class RefundPaymentProcessManager
             $event->currencyCode(),
             RefundPaymentInterface::STATE_NEW,
             $event->paymentMethodId(),
+            $event->payedAt(),
             $event->reference(),
             $event->comment()
         );

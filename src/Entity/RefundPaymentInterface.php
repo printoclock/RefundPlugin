@@ -30,6 +30,8 @@ interface RefundPaymentInterface extends ResourceInterface
 
     public function getPaymentMethod(): PaymentMethodInterface;
 
+    public function getPayedAt(): ?\DateTime;
+
     public function getReference(): ?string;
 
     public function getComment(): ?string;

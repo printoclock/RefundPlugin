@@ -16,6 +16,7 @@ interface RefundPaymentFactoryInterface
         string $currencyCode,
         string $state,
         int $paymentMethodId,
+        ?\DateTime $payedAt = null,
         ?string $reference = null,
         ?string $comment = null
     ): RefundPaymentInterface;

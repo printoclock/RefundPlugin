@@ -19,6 +19,7 @@
         <field name="feeAmount" type="integer" />
         <field name="currencyCode" column="currency_code"/>
         <field name="state" />
+        <field name="payedAt" column="payed_at" type="datetime" nullable="true" />
         <field name="reference" nullable="true" />
         <field name="comment" type="text" nullable="true" />
 

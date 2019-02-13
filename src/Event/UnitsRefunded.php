@@ -37,6 +37,9 @@ final class UnitsRefunded
     /** @var string */
     private $currencyCode;
 
+    /** @var \DateTime|null */
+    private $payedAt;
+
     /** @var string|null */
     private $reference;
 
@@ -53,6 +56,7 @@ final class UnitsRefunded
         int $amount,
         int $feeAmount,
         string $currencyCode,
+        ?\DateTime $payedAt = null,
         ?string $reference = null,
         ?string $comment = null
     ) {
@@ -65,6 +69,7 @@ final class UnitsRefunded
         $this->amount = $amount;
         $this->feeAmount = $feeAmount;
         $this->currencyCode = $currencyCode;
+        $this->payedAt = $payedAt;
         $this->reference = $reference;
         $this->comment = $comment;
     }
@@ -115,6 +120,11 @@ final class UnitsRefunded
     public function currencyCode(): string
     {
         return $this->currencyCode;
+    }
+
+    public function payedAt(): ?\DateTime
+    {
+        return $this->payedAt;
     }
 
     public function reference(): ?string
