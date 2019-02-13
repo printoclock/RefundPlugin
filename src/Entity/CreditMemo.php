@@ -46,6 +46,9 @@ class CreditMemo implements CreditMemoInterface
     /** @var string */
     private $shopBillingData;
 
+    /** @var string */
+    private $paymentMethod;
+
     public function __construct(
         string $id,
         string $token,
@@ -59,7 +62,8 @@ class CreditMemo implements CreditMemoInterface
         string $comment,
         \DateTimeInterface $issuedAt,
         string $billingData,
-        string $shopBillingData
+        string $shopBillingData,
+        string $paymentMethod
     ) {
         $this->id = $id;
         $this->token = $token;
@@ -74,6 +78,7 @@ class CreditMemo implements CreditMemoInterface
         $this->issuedAt = $issuedAt;
         $this->billingData = $billingData;
         $this->shopBillingData = $shopBillingData;
+        $this->paymentMethod = $paymentMethod;
     }
 
     public function getId(): string
@@ -165,5 +170,10 @@ class CreditMemo implements CreditMemoInterface
     public function getShopBillingData(): CreditMemoBillingData
     {
         return CreditMemoBillingData::unserialize($this->shopBillingData);
+    }
+
+    public function getPaymentMethod(): CreditMemoPaymentMethod
+    {
+        return CreditMemoPaymentMethod::unserialize($this->paymentMethod);
     }
 }

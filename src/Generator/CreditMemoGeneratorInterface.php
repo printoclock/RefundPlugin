@@ -15,6 +15,7 @@ interface CreditMemoGeneratorInterface
         array $units,
         array $shipments,
         array $fees,
-        string $comment
+        string $comment,
+        int $paymentMethodId
     ): CreditMemoInterface;
 }

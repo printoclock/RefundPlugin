@@ -42,7 +42,8 @@ final class GenerateCreditMemoHandler
             $command->units(),
             $command->shipments(),
             $command->fees(),
-            $command->comment()
+            $command->comment(),
+            $command->paymentMethodId()
         );
 
         $this->creditMemoManager->persist($creditMemo);

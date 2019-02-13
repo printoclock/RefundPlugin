@@ -21,6 +21,7 @@
         <field name="issuedAt" column="issued_at" type="datetime" nullable="true" />
         <field name="billingData" type="text" />
         <field name="shopBillingData" type="text" />
+        <field name="paymentMethod" type="text" />
 
         <embedded name="channel" class="Sylius\RefundPlugin\Entity\CreditMemoChannel" />
 

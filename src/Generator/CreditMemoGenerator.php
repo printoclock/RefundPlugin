@@ -6,15 +6,19 @@ namespace Sylius\RefundPlugin\Generator;
 
 use Sylius\Component\Core\Model\ChannelInterface;
 use Sylius\Component\Core\Model\OrderInterface;
+use Sylius\Component\Core\Model\PaymentMethod ;
 use Sylius\Component\Core\Repository\OrderRepositoryInterface;
+use Sylius\Component\Core\Repository\PaymentMethodRepositoryInterface;
 use Sylius\InvoicingPlugin\Entity\Invoice;
 use Sylius\InvoicingPlugin\Repository\InvoiceRepository;
 use Sylius\RefundPlugin\Entity\CreditMemo;
 use Sylius\RefundPlugin\Entity\CreditMemoBillingData;
 use Sylius\RefundPlugin\Entity\CreditMemoChannel;
 use Sylius\RefundPlugin\Entity\CreditMemoInterface;
+use Sylius\RefundPlugin\Entity\CreditMemoPaymentMethod;
 use Sylius\RefundPlugin\Exception\InvoiceNotFound;
 use Sylius\RefundPlugin\Exception\OrderNotFound;
+use Sylius\RefundPlugin\Exception\PaymentMethodNotFound;
 use Sylius\RefundPlugin\Model\UnitRefundInterface;
 use Sylius\RefundPlugin\Provider\CurrentDateTimeProviderInterface;
 
@@ -25,6 +29,9 @@ final class CreditMemoGenerator implements CreditMemoGeneratorInterface
 
     /** @var InvoiceRepository */
     private $invoiceRepository;
+
+    /** @var PaymentMethodRepositoryInterface */
+    private $paymentMethodRepository;
 
     /** @var CreditMemoUnitGeneratorInterface */
     private $orderItemUnitCreditMemoUnitGenerator;
@@ -47,6 +54,7 @@ final class CreditMemoGenerator implements CreditMemoGeneratorInterface
     public function __construct(
         OrderRepositoryInterface $orderRepository,
         InvoiceRepository $invoiceRepository,
+        PaymentMethodRepositoryInterface $paymentMethodRepository,
         CreditMemoUnitGeneratorInterface $orderItemUnitCreditMemoUnitGenerator,
         CreditMemoUnitGeneratorInterface $shipmentCreditMemoUnitGenerator,
         CreditMemoUnitGeneratorInterface $feeCreditMemoUnitGenerator,
@@ -56,6 +64,7 @@ final class CreditMemoGenerator implements CreditMemoGeneratorInterface
     ) {
         $this->orderRepository = $orderRepository;
         $this->invoiceRepository = $invoiceRepository;
+        $this->paymentMethodRepository = $paymentMethodRepository;
         $this->orderItemUnitCreditMemoUnitGenerator = $orderItemUnitCreditMemoUnitGenerator;
         $this->shipmentCreditMemoUnitGenerator = $shipmentCreditMemoUnitGenerator;
         $this->feeCreditMemoUnitGenerator = $feeCreditMemoUnitGenerator;
@@ -71,7 +80,8 @@ final class CreditMemoGenerator implements CreditMemoGeneratorInterface
         array $units,
         array $shipments,
         array $fees,
-        string $comment
+        string $comment,
+        int $paymentMethodId
     ): CreditMemoInterface {
         /** @var OrderInterface|null $order */
         $order = $this->orderRepository->findOneByNumber($orderNumber);
@@ -85,6 +95,13 @@ final class CreditMemoGenerator implements CreditMemoGeneratorInterface
 
         if ($invoice === null) {
             throw InvoiceNotFound::withNumber($orderNumber);
+        }
+
+        /** @var PaymentMethod|null $invoice */
+        $paymentMethod = $this->paymentMethodRepository->find($paymentMethodId);
+
+        if ($paymentMethod === null) {
+            throw PaymentMethodNotFound::withNumber($orderNumber);
         }
 
         /** @var ChannelInterface $channel */
@@ -137,6 +154,14 @@ final class CreditMemoGenerator implements CreditMemoGeneratorInterface
             $invoiceShopBillingData->getCountryCode()
         );
 
+        $paymentMethodData = new CreditMemoPaymentMethod(
+            $paymentMethod->getCode(),
+            $paymentMethod->getName(),
+            $paymentMethod->getInstructions(),
+            null,
+            null
+        );
+
         return new CreditMemo(
             $this->uuidCreditMemoIdentifierGenerator->generate(),
             $token,
@@ -150,7 +175,8 @@ final class CreditMemoGenerator implements CreditMemoGeneratorInterface
             $comment,
             $this->currentDateTimeProvider->now(),
             $billingData->serialize(),
-            $shopBillingData->serialize()
+            $shopBillingData->serialize(),
+            $paymentMethodData->serialize()
         );
     }
 }
