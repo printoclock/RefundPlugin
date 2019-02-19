@@ -17,6 +17,9 @@
         <service id="Sylius\RefundPlugin\Generator\ShipmentCreditMemoUnitGenerator">
             <argument type="service" id="sylius.repository.adjustment" />
         </service>
+        <service id="Sylius\RefundPlugin\Generator\PaymentCreditMemoUnitGenerator">
+            <argument type="service" id="sylius.repository.adjustment" />
+        </service>
         <service id="Sylius\RefundPlugin\Generator\FeeCreditMemoUnitGenerator">
             <argument type="service" id="sylius.repository.order_item_unit" />
         </service>
