@@ -7,6 +7,7 @@ namespace Sylius\RefundPlugin\Creator;
 use Sylius\RefundPlugin\Command\RefundUnits;
 use Sylius\RefundPlugin\Model\FeeRefund;
 use Sylius\RefundPlugin\Model\OrderItemUnitRefund;
+use Sylius\RefundPlugin\Model\PaymentRefund;
 use Sylius\RefundPlugin\Model\RefundType;
 use Sylius\RefundPlugin\Model\ShipmentRefund;
 use Sylius\RefundPlugin\Model\UnitRefundInterface;
@@ -31,6 +32,7 @@ final class RefundUnitsCommandCreator implements RefundUnitsCommandCreatorInterf
 
         $units = $this->filterEmptyRefundUnits($request->request->get('sylius_refund_units', []));
         $shipments = $this->filterEmptyRefundUnits($request->request->get('sylius_refund_shipments', []));
+        $payments = $this->filterEmptyRefundUnits($request->request->get('sylius_refund_payments', []));
         $fees = $this->filterEmptyRefundUnits($request->request->get('sylius_refund_fees', []));
 
         if (count($units) === 0 && count($shipments) === 0) {
@@ -41,6 +43,7 @@ final class RefundUnitsCommandCreator implements RefundUnitsCommandCreatorInterf
             $request->attributes->get('orderNumber'),
             $this->parseIdsToUnitRefunds($units),
             $this->parseIdsToShipmentRefunds($shipments),
+            $this->parseIdsToPaymentRefunds($payments),
             $this->parseIdsToFeeRefunds($fees),
             (int) $request->request->get('sylius_refund_payment_method'),
             $request->request->get('sylius_refund_date'),
@@ -90,6 +93,28 @@ final class RefundUnitsCommandCreator implements RefundUnitsCommandCreatorInterf
             $total = $this->remainingTotalProvider->getTotalLeftToRefund($id, RefundType::shipment());
 
             return new ShipmentRefund($id, $total);
+        }, $units);
+    }
+
+    /**
+     * Parse payment id's to PaymentRefund with id and remaining total or amount passed in request
+     *
+     * @return array|UnitRefundInterface[]
+     */
+    private function parseIdsToPaymentRefunds(array $units): array
+    {
+        return array_map(function (array $refundPayment): UnitRefundInterface {
+            if (isset($refundPayment['amount']) && $refundPayment['amount'] !== '') {
+                $id = (int) $refundPayment['partial-id'];
+                $total = (int) (((float) $refundPayment['amount']) * 100);
+
+                return new PaymentRefund($id, $total);
+            }
+
+            $id = (int) $refundPayment['id'];
+            $total = $this->remainingTotalProvider->getTotalLeftToRefund($id, RefundType::payment());
+
+            return new PaymentRefund($id, $total);
         }, $units);
     }
 
