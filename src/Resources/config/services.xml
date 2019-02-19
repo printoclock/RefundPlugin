@@ -26,6 +26,10 @@
             <argument type="service" id="Sylius\RefundPlugin\Creator\RefundCreator" />
             <argument type="service" id="sylius_refund_plugin.event_bus" />
         </service>
+        <service id="Sylius\RefundPlugin\Refunder\OrderPaymentsRefunder">
+            <argument type="service" id="Sylius\RefundPlugin\Creator\RefundCreator" />
+            <argument type="service" id="sylius_refund_plugin.event_bus" />
+        </service>
         <service id="Sylius\RefundPlugin\Refunder\OrderFeesRefunder">
             <argument type="service" id="Sylius\RefundPlugin\Creator\RefundCreator" />
             <argument type="service" id="sylius_refund_plugin.event_bus" />

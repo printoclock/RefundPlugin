@@ -6,6 +6,7 @@ namespace Sylius\RefundPlugin\Command;
 
 use Sylius\RefundPlugin\Model\FeeRefund;
 use Sylius\RefundPlugin\Model\OrderItemUnitRefund;
+use Sylius\RefundPlugin\Model\PaymentRefund;
 use Sylius\RefundPlugin\Model\ShipmentRefund;
 
 final class GenerateCreditMemo
@@ -25,6 +26,9 @@ final class GenerateCreditMemo
     /** @var array|ShipmentRefund[] */
     private $shipments;
 
+    /** @var array|PaymentRefund[] */
+    private $payments;
+
     /** @var array|FeeRefund[] */
     private $fees;
 
@@ -40,6 +44,7 @@ final class GenerateCreditMemo
         int $total,
         array $units,
         array $shipments,
+        array $payments,
         array $fees,
         string $comment,
         int $paymentMethodId
@@ -49,6 +54,7 @@ final class GenerateCreditMemo
         $this->total = $total;
         $this->units = $units;
         $this->shipments = $shipments;
+        $this->payments = $payments;
         $this->fees = $fees;
         $this->comment = $comment;
         $this->paymentMethodId = $paymentMethodId;
@@ -79,6 +85,12 @@ final class GenerateCreditMemo
     public function shipments(): array
     {
         return $this->shipments;
+    }
+
+    /** @return array|PaymentRefund[] */
+    public function payments(): array
+    {
+        return $this->payments;
     }
 
     /** @return array|FeeRefund[] */

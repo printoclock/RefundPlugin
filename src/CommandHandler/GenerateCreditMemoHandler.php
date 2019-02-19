@@ -41,6 +41,7 @@ final class GenerateCreditMemoHandler
             $command->total(),
             $command->units(),
             $command->shipments(),
+            $command->payments(),
             $command->fees(),
             $command->comment(),
             $command->paymentMethodId()

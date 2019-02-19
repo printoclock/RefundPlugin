@@ -27,6 +27,7 @@
             <argument type="service" id="sylius.repository.payment_method" />
             <argument type="service" id="Sylius\RefundPlugin\Generator\OrderItemUnitCreditMemoUnitGenerator" />
             <argument type="service" id="Sylius\RefundPlugin\Generator\ShipmentCreditMemoUnitGenerator" />
+            <argument type="service" id="Sylius\RefundPlugin\Generator\PaymentCreditMemoUnitGenerator" />
             <argument type="service" id="Sylius\RefundPlugin\Generator\FeeCreditMemoUnitGenerator" />
             <argument type="service" id="Sylius\RefundPlugin\Generator\SequentialNumberGenerator" />
             <argument type="service" id="Sylius\RefundPlugin\Provider\CurrentDateTimeProviderInterface" />

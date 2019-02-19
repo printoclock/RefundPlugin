@@ -21,6 +21,9 @@ final class RefundUnitsHandler
     private $orderShipmentsRefunder;
 
     /** @var RefunderInterface */
+    private $orderPaymentsRefunder;
+
+    /** @var RefunderInterface */
     private $orderFeesRefunder;
 
     /** @var MessageBusInterface */
@@ -35,6 +38,7 @@ final class RefundUnitsHandler
     public function __construct(
         RefunderInterface $orderUnitsRefunder,
         RefunderInterface $orderShipmentsRefunder,
+        RefunderInterface $orderPaymentsRefunder,
         RefunderInterface $orderFeesRefunder,
         MessageBusInterface $eventBus,
         OrderRepositoryInterface $orderRepository,
@@ -42,6 +46,7 @@ final class RefundUnitsHandler
     ) {
         $this->orderUnitsRefunder = $orderUnitsRefunder;
         $this->orderShipmentsRefunder = $orderShipmentsRefunder;
+        $this->orderPaymentsRefunder = $orderPaymentsRefunder;
         $this->orderFeesRefunder = $orderFeesRefunder;
         $this->eventBus = $eventBus;
         $this->orderRepository = $orderRepository;
@@ -57,11 +62,12 @@ final class RefundUnitsHandler
         /** @var OrderInterface $order */
         $order = $this->orderRepository->findOneByNumber($orderNumber);
 
-        $refundedTotal = 0;
         $refundedFeeTotal = $this->orderFeesRefunder->refundFromOrder($command->fees(), $orderNumber);
 
+        $refundedTotal = 0;
         $refundedTotal += $this->orderUnitsRefunder->refundFromOrder($command->units(), $orderNumber);
         $refundedTotal += $this->orderShipmentsRefunder->refundFromOrder($command->shipments(), $orderNumber);
+        $refundedTotal += $this->orderPaymentsRefunder->refundFromOrder($command->payments(), $orderNumber);
         $refundedTotal += $refundedFeeTotal;
 
         $this->eventBus->dispatch(new UnitsRefunded(
@@ -69,6 +75,7 @@ final class RefundUnitsHandler
             $orderNumber,
             $command->units(),
             $command->shipments(),
+            $command->payments(),
             $command->fees(),
             $command->paymentMethodId(),
             $refundedTotal,
