@@ -137,7 +137,7 @@ final class RefundUnitsCommandCreator implements RefundUnitsCommandCreatorInterf
 
             return new FeeRefund($id, 0);
         }, $units), function (FeeRefund $feeRefund) {
-            return ($feeRefund->total() > 0);
+            return ($feeRefund->total() < 0);
         });
     }
 
