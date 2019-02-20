@@ -33,5 +33,6 @@ final class RefundUnitsCommandValidator implements RefundUnitsCommandValidatorIn
 
         $this->refundAmountValidator->validateUnits($command->units(), RefundType::orderItemUnit());
         $this->refundAmountValidator->validateUnits($command->shipments(), RefundType::shipment());
+        $this->refundAmountValidator->validateUnits($command->payments(), RefundType::payment());
     }
 }
