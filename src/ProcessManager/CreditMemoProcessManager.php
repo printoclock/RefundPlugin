@@ -26,6 +26,7 @@ final class CreditMemoProcessManager
             $event->amount(),
             $event->units(),
             $event->shipments(),
+            $event->payments(),
             $event->fees(),
             $event->comment(),
             $event->paymentMethodId()
