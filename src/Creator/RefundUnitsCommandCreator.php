@@ -125,7 +125,7 @@ final class RefundUnitsCommandCreator implements RefundUnitsCommandCreatorInterf
      */
     private function parseIdsToFeeRefunds(array $units): array
     {
-        return array_map(function (array $refundFee): UnitRefundInterface {
+        return array_filter(array_map(function (array $refundFee): UnitRefundInterface {
             if (isset($refundFee['amount']) && $refundFee['amount'] !== '') {
                 $id = (int) $refundFee['partial-id'];
                 $total = (int) (((float) $refundFee['amount']) * -100);
@@ -136,7 +136,9 @@ final class RefundUnitsCommandCreator implements RefundUnitsCommandCreatorInterf
             $id = (int) $refundFee['id'];
 
             return new FeeRefund($id, 0);
-        }, $units);
+        }, $units), function (FeeRefund $feeRefund) {
+            return ($feeRefund->total() > 0);
+        });
     }
 
     private function filterEmptyRefundUnits(array $units): array
