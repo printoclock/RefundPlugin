@@ -14,7 +14,6 @@
         </id>
 
         <field name="token" />
-        <field name="orderNumber" column="order_number"/>
         <field name="amount" type="integer" />
         <field name="feeAmount" type="integer" />
         <field name="currencyCode" column="currency_code"/>
@@ -29,6 +28,10 @@
         <field name="updatedAt" column="updated_at" type="datetime" nullable="true">
             <gedmo:timestampable on="update"/>
         </field>
+
+        <many-to-one field="order" target-entity="Sylius\Component\Order\Model\OrderInterface">
+            <join-column name="order_id" referenced-column-name="id" nullable="false" />
+        </many-to-one>
 
         <many-to-one field="paymentMethod" target-entity="Sylius\Component\Payment\Model\PaymentMethodInterface">
             <join-column name="payment_method_id" referenced-column-name="id" nullable="true" />

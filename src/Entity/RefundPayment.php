@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Sylius\RefundPlugin\Entity;
 
 use Sylius\Component\Core\Model\PaymentMethodInterface;
+use Sylius\Component\Order\Model\OrderInterface;
 
 /** @final */
 class RefundPayment implements RefundPaymentInterface
@@ -15,8 +16,8 @@ class RefundPayment implements RefundPaymentInterface
     /** @var string */
     private $token;
 
-    /** @var string */
-    private $orderNumber;
+    /** @var OrderInterface */
+    private $order;
 
     /** @var int */
     private $amount;
@@ -50,7 +51,7 @@ class RefundPayment implements RefundPaymentInterface
 
     public function __construct(
         string $token,
-        string $orderNumber,
+        OrderInterface $order,
         int $amount,
         int $feeAmount,
         string $currencyCode,
@@ -61,7 +62,7 @@ class RefundPayment implements RefundPaymentInterface
         ?string $comment = null
     ) {
         $this->token = $token;
-        $this->orderNumber = $orderNumber;
+        $this->order = $order;
         $this->amount = $amount;
         $this->feeAmount = $feeAmount;
         $this->currencyCode = $currencyCode;
@@ -82,9 +83,14 @@ class RefundPayment implements RefundPaymentInterface
         $this->token = $token;
     }
 
+    public function getOrder(): OrderInterface
+    {
+        return $this->order;
+    }
+
     public function getOrderNumber(): string
     {
-        return $this->orderNumber;
+        return $this->getOrder()->getNumber();
     }
 
     public function getAmount(): int

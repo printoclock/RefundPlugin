@@ -6,16 +6,24 @@ namespace Sylius\RefundPlugin\Factory;
 
 use Sylius\Component\Core\Model\PaymentMethodInterface;
 use Sylius\Component\Core\Repository\PaymentMethodRepositoryInterface;
+use Sylius\Component\Order\Model\OrderInterface;
+use Sylius\Component\Order\Repository\OrderRepositoryInterface;
 use Sylius\RefundPlugin\Entity\RefundPayment;
 use Sylius\RefundPlugin\Entity\RefundPaymentInterface;
 
 final class RefundPaymentFactory implements RefundPaymentFactoryInterface
 {
+    /** @var OrderRepositoryInterface */
+    private $orderRepository;
+
     /** @var PaymentMethodRepositoryInterface */
     private $paymentMethodRepository;
 
-    public function __construct(PaymentMethodRepositoryInterface $paymentMethodRepository)
-    {
+    public function __construct(
+        OrderRepositoryInterface $orderRepository,
+        PaymentMethodRepositoryInterface $paymentMethodRepository
+    ) {
+        $this->orderRepository = $orderRepository;
         $this->paymentMethodRepository = $paymentMethodRepository;
     }
 
@@ -31,9 +39,12 @@ final class RefundPaymentFactory implements RefundPaymentFactoryInterface
         ?string $reference = null,
         ?string $comment = null
     ): RefundPaymentInterface {
+        /** @var OrderInterface $order */
+        $order = $this->orderRepository->findOneByNumber($orderNumber);
+
         /** @var PaymentMethodInterface $paymentMethod */
         $paymentMethod = $this->paymentMethodRepository->find($paymentMethodId);
 
-        return new RefundPayment($token, $orderNumber, $amount, $feeAmount, $currencyCode, $state, $paymentMethod, $payedAt, $reference, $comment);
+        return new RefundPayment($token, $order, $amount, $feeAmount, $currencyCode, $state, $paymentMethod, $payedAt, $reference, $comment);
     }
 }
