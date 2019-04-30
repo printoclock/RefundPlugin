@@ -88,6 +88,11 @@ class RefundPayment implements RefundPaymentInterface
         return $this->order;
     }
 
+    public function setOrder(OrderInterface $order): void
+    {
+        $this->order = $order;
+    }
+
     public function getOrderNumber(): string
     {
         return $this->getOrder()->getNumber();
