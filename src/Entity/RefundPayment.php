@@ -16,6 +16,9 @@ class RefundPayment implements RefundPaymentInterface
     /** @var string */
     private $token;
 
+    /** @var string */
+    private $orderNumber;
+
     /** @var OrderInterface */
     private $order;
 
@@ -51,6 +54,7 @@ class RefundPayment implements RefundPaymentInterface
 
     public function __construct(
         string $token,
+        string $orderNumber,
         OrderInterface $order,
         int $amount,
         int $feeAmount,
@@ -62,6 +66,7 @@ class RefundPayment implements RefundPaymentInterface
         ?string $comment = null
     ) {
         $this->token = $token;
+        $this->orderNumber = $orderNumber;
         $this->order = $order;
         $this->amount = $amount;
         $this->feeAmount = $feeAmount;
@@ -83,6 +88,11 @@ class RefundPayment implements RefundPaymentInterface
         $this->token = $token;
     }
 
+    public function getOrderNumber(): string
+    {
+        return $this->orderNumber;
+    }
+
     public function getOrder(): OrderInterface
     {
         return $this->order;
@@ -91,11 +101,7 @@ class RefundPayment implements RefundPaymentInterface
     public function setOrder(OrderInterface $order): void
     {
         $this->order = $order;
-    }
-
-    public function getOrderNumber(): string
-    {
-        return $this->getOrder()->getNumber();
+        $this->orderNumber = $order->getNumber();
     }
 
     public function getAmount(): int

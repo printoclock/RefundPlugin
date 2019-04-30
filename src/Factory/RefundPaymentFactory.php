@@ -45,6 +45,6 @@ final class RefundPaymentFactory implements RefundPaymentFactoryInterface
         /** @var PaymentMethodInterface $paymentMethod */
         $paymentMethod = $this->paymentMethodRepository->find($paymentMethodId);
 
-        return new RefundPayment($token, $order, $amount, $feeAmount, $currencyCode, $state, $paymentMethod, $payedAt, $reference, $comment);
+        return new RefundPayment($token, $orderNumber, $order, $amount, $feeAmount, $currencyCode, $state, $paymentMethod, $payedAt, $reference, $comment);
     }
 }
