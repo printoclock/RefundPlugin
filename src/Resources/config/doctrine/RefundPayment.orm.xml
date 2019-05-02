@@ -31,7 +31,7 @@
         </field>
 
         <many-to-one field="order" target-entity="Sylius\Component\Order\Model\OrderInterface">
-            <join-column name="order_id" referenced-column-name="id" nullable="true" />
+            <join-column name="order_id" referenced-column-name="id" />
         </many-to-one>
 
         <many-to-one field="paymentMethod" target-entity="Sylius\Component\Payment\Model\PaymentMethodInterface">
