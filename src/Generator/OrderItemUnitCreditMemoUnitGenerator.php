@@ -40,7 +40,7 @@ final class OrderItemUnitCreditMemoUnitGenerator implements CreditMemoUnitGenera
             RefundType::ORDER_ITEM_UNIT,
             $orderItem->getProductName(),
             ($variant !== null) ? $variant->getCode() : null,
-            ($variant !== null) ? $variant->getOptionsDisplayAsArray() : [],
+            ($variant !== null) ? $orderItem->getOptionsDisplayAsArray() : [],
             $orderItem->getNumber(),
             $amount - $taxTotal,
             $taxTotal,
