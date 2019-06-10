@@ -3,7 +3,7 @@ sylius_refund:
         completed: Complété
         credit_memo: Facture d'avoir
         credit_memos: Factures d'avoir
-        download: Télécharer
+        download: Télécharger
         issued_at: Emise le
         issued_for_order: Emise pour la commande
         issued_from: Emise par
