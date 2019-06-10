@@ -100,6 +100,10 @@
             <argument type="service" id="Sylius\RefundPlugin\File\TemporaryFileManager" />
         </service>
 
+        <service id="Sylius\RefundPlugin\Sender\RefundPaymentEmailSender">
+            <argument type="service" id="sylius.email_sender" />
+        </service>
+
         <service id="sylius_refund_plugin.block_event_listener.account.order_show" class="Sylius\Bundle\UiBundle\Block\BlockEventListener">
             <argument>@SyliusRefundPlugin/Order/Shop/creditMemos.html.twig</argument>
             <tag name="kernel.event_listener" event="sonata.block.event.sylius.shop.account.order.show.after_summary" method="onBlockEvent" />
