@@ -43,6 +43,11 @@ winzou_state_machine:
                     on: ['complete']
                     do: ['@Sylius\RefundPlugin\StateResolver\OrderPaymentStateResolver', 'resolve']
                     args: ['object.getOrderNumber()', 'object']
+                send_mail:
+                    on: ['complete']
+                    do: ['@Sylius\RefundPlugin\StateResolver\OrderPaymentStateResolver', 'sendMail']
+                    args: ['object']
+                    priority: 255
 
 sylius_grid:
     templates:

@@ -11,6 +11,7 @@ use Sylius\Component\Core\Repository\OrderRepositoryInterface;
 use Sylius\RefundPlugin\Checker\OrderFullyRefundedTotalCheckerInterface;
 use Sylius\RefundPlugin\Entity\RefundPayment;
 use Sylius\RefundPlugin\Provider\RefundPaymentProviderInterface;
+use Sylius\RefundPlugin\Sender\RefundPaymentEmailSenderInterface;
 use Webmozart\Assert\Assert;
 
 final class OrderPaymentStateResolver implements OrderPaymentStateResolverInterface
@@ -27,16 +28,21 @@ final class OrderPaymentStateResolver implements OrderPaymentStateResolverInterf
     /** @var OrderRepositoryInterface */
     private $orderRepository;
 
+    /** @var RefundPaymentEmailSenderInterface */
+    private $refundPaymentEmailSender;
+
     public function __construct(
         FactoryInterface $stateMachineFactory,
         ObjectManager $orderManager,
         RefundPaymentProviderInterface $refundPaymentProvider,
-        OrderRepositoryInterface $orderRepository
+        OrderRepositoryInterface $orderRepository,
+        RefundPaymentEmailSenderInterface $refundPaymentEmailSender
     ) {
         $this->stateMachineFactory = $stateMachineFactory;
         $this->orderManager = $orderManager;
         $this->refundPaymentProvider = $refundPaymentProvider;
         $this->orderRepository = $orderRepository;
+        $this->refundPaymentEmailSender = $refundPaymentEmailSender;
     }
 
     public function resolve(string $orderNumber, ?RefundPayment $payment = null): void
@@ -58,5 +64,9 @@ final class OrderPaymentStateResolver implements OrderPaymentStateResolverInterf
         }
 
         $this->orderManager->flush();
+    }
+
+    public function sendMail(RefundPayment $refundPayment) {
+        $this->refundPaymentEmailSender->send($refundPayment, $refundPayment->getOrder()->getCustomer()->getEmail());
     }
 }
