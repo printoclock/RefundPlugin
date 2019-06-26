@@ -44,6 +44,7 @@ final class RefundPaymentHandler
             'token' => $token
         ]) : null;
 
-        $this->refundPaymentEmailSender->send($refundPayment, $order->getCustomer()->getEmail());
+        // Send the mail when the refund payment has been confirmed
+        //$this->refundPaymentEmailSender->send($refundPayment, $order->getCustomer()->getEmail());
     }
 }
