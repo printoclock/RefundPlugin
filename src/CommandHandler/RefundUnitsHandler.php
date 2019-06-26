@@ -71,7 +71,7 @@ final class RefundUnitsHandler
         $refundedTotal += $refundedFeeTotal;
 
         $this->eventBus->dispatch(new UnitsRefunded(
-            bin2hex(random_bytes(16)),
+            $command->token() ?? bin2hex(random_bytes(16)),
             $orderNumber,
             $command->units(),
             $command->shipments(),

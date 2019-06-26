@@ -48,7 +48,8 @@ final class RefundUnitsCommandCreator implements RefundUnitsCommandCreatorInterf
             (int) $request->request->get('sylius_refund_payment_method'),
             $request->request->get('sylius_refund_date'),
             $request->request->get('sylius_refund_reference'),
-            $request->request->get('sylius_refund_comment')
+            $request->request->get('sylius_refund_comment'),
+            $request->request->get('sylius_refund_token', null)
         );
     }
 

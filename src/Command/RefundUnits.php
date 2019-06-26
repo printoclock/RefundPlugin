@@ -38,6 +38,9 @@ final class RefundUnits
     /** @var string|null */
     private $comment;
 
+    /** @var string|null */
+    private $token;
+
     public function __construct(
         string $orderNumber,
         array $units,
@@ -47,7 +50,8 @@ final class RefundUnits
         int $paymentMethodId,
         ?\DateTime $payedAt = null,
         ?string $reference = null,
-        ?string $comment = null
+        ?string $comment = null,
+        ?string $token = null
     ) {
         $this->orderNumber = $orderNumber;
         $this->units = $units;
@@ -58,6 +62,7 @@ final class RefundUnits
         $this->payedAt = $payedAt;
         $this->reference = $reference;
         $this->comment = $comment;
+        $this->token = $token;
     }
 
     public function orderNumber(): string
@@ -107,5 +112,10 @@ final class RefundUnits
     public function comment(): ?string
     {
         return $this->comment;
+    }
+
+    public function token(): ?string
+    {
+        return $this->token;
     }
 }
