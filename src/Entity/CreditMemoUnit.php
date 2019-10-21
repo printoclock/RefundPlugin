@@ -73,14 +73,29 @@ class CreditMemoUnit implements CreditMemoUnitInterface
         return $this->subtotal;
     }
 
+    public function setSubtotal(int $subtotal): void
+    {
+        $this->subtotal = $subtotal;
+    }
+
+
     public function getTaxTotal(): int
     {
         return $this->taxTotal;
     }
 
+    public function setTaxTotal(int $taxTotal): void
+    {
+        $this->taxTotal = $taxTotal;
+    }
+
     public function getTotal(): int
     {
         return $this->total;
+    }
+    public function setTotal(int $total): void
+    {
+        $this->total = $total;
     }
 
     public function serialize(): string
