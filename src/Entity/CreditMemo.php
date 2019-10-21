@@ -111,6 +111,11 @@ class CreditMemo implements CreditMemoInterface
         return $this->total;
     }
 
+    public function setTotal(int $total): void
+    {
+        $this->total = $total;
+    }
+
     public function getCurrencyCode(): string
     {
         return $this->currencyCode;
@@ -134,6 +139,10 @@ class CreditMemo implements CreditMemoInterface
         }
 
         return $units;
+    }
+
+    public function setUnits(array $units): void {
+        $this->units = $units;
     }
 
     public function getUnitsSubtotal(): int {
