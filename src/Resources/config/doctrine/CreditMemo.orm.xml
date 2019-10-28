@@ -13,6 +13,7 @@
         <field name="token" />
         <field name="number" />
         <field name="orderNumber" />
+        <field name="taxTotal" column="tax_total" type="integer" />
         <field name="total" type="integer" />
         <field name="units" type="json" />
         <field name="currencyCode" />
