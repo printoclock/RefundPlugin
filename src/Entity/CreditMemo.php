@@ -20,6 +20,9 @@ class CreditMemo implements CreditMemoInterface
     private $orderNumber;
 
     /** @var int */
+    private $taxTotal;
+
+    /** @var int */
     private $total;
 
     /** @var string */
@@ -54,6 +57,7 @@ class CreditMemo implements CreditMemoInterface
         string $token,
         string $number,
         string $orderNumber,
+        int $taxTotal,
         int $total,
         string $currencyCode,
         string $localeCode,
@@ -69,6 +73,7 @@ class CreditMemo implements CreditMemoInterface
         $this->token = $token;
         $this->number = $number;
         $this->orderNumber = $orderNumber;
+        $this->taxTotal = $taxTotal;
         $this->total = $total;
         $this->currencyCode = $currencyCode;
         $this->localeCode = $localeCode;
@@ -104,6 +109,16 @@ class CreditMemo implements CreditMemoInterface
     public function getOrderNumber(): string
     {
         return $this->orderNumber;
+    }
+
+    public function getTaxTotal(): int
+    {
+        return $this->taxTotal;
+    }
+
+    public function setTaxTotal(int $taxTotal): void
+    {
+        $this->taxTotal = $taxTotal;
     }
 
     public function getTotal(): int

@@ -110,34 +110,39 @@ final class CreditMemoGenerator implements CreditMemoGeneratorInterface
         /** @var ChannelInterface $channel */
         $channel = $order->getChannel();
 
+        $taxTotal = 0;
         $creditMemoUnits = [];
 
         /** @var UnitRefundInterface $unit */
         foreach ($units as $unit) {
-            $creditMemoUnits[] = $this->orderItemUnitCreditMemoUnitGenerator
-                ->generate($unit->id(), $unit->total())
-                ->serialize();
+            $creditMemoUnit = $this->orderItemUnitCreditMemoUnitGenerator->generate($unit->id(), $unit->total());
+
+            $taxTotal += $creditMemoUnit->getTaxTotal();
+            $creditMemoUnits[] = $creditMemoUnit->serialize();
         }
 
         /** @var UnitRefundInterface $shipment */
         foreach ($shipments as $shipment) {
-            $creditMemoUnits[] = $this->shipmentCreditMemoUnitGenerator
-                ->generate($shipment->id(), $shipment->total())
-                ->serialize();
+            $creditMemoUnit = $this->shipmentCreditMemoUnitGenerator->generate($shipment->id(), $shipment->total());
+
+            $taxTotal += $creditMemoUnit->getTaxTotal();
+            $creditMemoUnits[] = $creditMemoUnit->serialize();
         }
 
         /** @var UnitRefundInterface $payment */
         foreach ($payments as $payment) {
-            $creditMemoUnits[] = $this->paymentCreditMemoUnitGenerator
-                ->generate($payment->id(), $payment->total())
-                ->serialize();
+            $creditMemoUnit = $this->paymentCreditMemoUnitGenerator->generate($payment->id(), $payment->total());
+
+            $taxTotal += $creditMemoUnit->getTaxTotal();
+            $creditMemoUnits[] = $creditMemoUnit->serialize();
         }
 
         /** @var UnitRefundInterface $fee */
         foreach ($fees as $fee) {
-            $creditMemoUnits[] = $this->feeCreditMemoUnitGenerator
-                ->generate($fee->id(), $fee->total(), $order->getItemUnits()->first())
-                ->serialize();
+            $creditMemoUnit = $this->feeCreditMemoUnitGenerator->generate($fee->id(), $fee->total(), $order->getItemUnits()->first());
+
+            $taxTotal += $creditMemoUnit->getTaxTotal();
+            $creditMemoUnits[] = $creditMemoUnit->serialize();
         }
 
         $invoiceBillingData = $invoice->billingData();
@@ -177,6 +182,7 @@ final class CreditMemoGenerator implements CreditMemoGeneratorInterface
             $token,
             $this->creditMemoNumberGenerator->generate(),
             $orderNumber,
+            $taxTotal,
             $total,
             $order->getCurrencyCode(),
             $order->getLocaleCode(),
