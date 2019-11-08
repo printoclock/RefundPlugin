@@ -48,6 +48,7 @@ final class ShipmentCreditMemoUnitGenerator implements CreditMemoUnitGeneratorIn
             [],
             null,
             $amount - $shippingTaxTotal,
+            null,
             $shippingTaxTotal,
             $amount
         );

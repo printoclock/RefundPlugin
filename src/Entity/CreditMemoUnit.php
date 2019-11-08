@@ -25,13 +25,16 @@ class CreditMemoUnit implements CreditMemoUnitInterface
     /** @var int */
     private $subtotal;
 
+    /** @var float|null */
+    protected $taxRate;
+
     /** @var int */
     private $taxTotal;
 
     /** @var int */
     private $total;
 
-    public function __construct(string $type, string $productName, ?string $variantCode, array $variantOptions, ?string $itemNumber, int $subtotal, int $taxTotal, int $total)
+    public function __construct(string $type, string $productName, ?string $variantCode, array $variantOptions, ?string $itemNumber, int $subtotal, ?float $taxRate, int $taxTotal, int $total)
     {
         $this->type = $type;
         $this->productName = $productName;
@@ -39,6 +42,7 @@ class CreditMemoUnit implements CreditMemoUnitInterface
         $this->variantOptions = $variantOptions;
         $this->itemNumber = $itemNumber;
         $this->subtotal = $subtotal;
+        $this->taxRate = $taxRate;
         $this->taxTotal = $taxTotal;
         $this->total = $total;
     }
@@ -78,6 +82,15 @@ class CreditMemoUnit implements CreditMemoUnitInterface
         $this->subtotal = $subtotal;
     }
 
+    public function getTaxRate(): ?float
+    {
+        return $this->taxRate;
+    }
+
+    public function setTaxRate(?float $taxRate): void
+    {
+        $this->taxRate = $taxRate;
+    }
 
     public function getTaxTotal(): int
     {
@@ -107,6 +120,7 @@ class CreditMemoUnit implements CreditMemoUnitInterface
             'variant_options' => $this->variantOptions,
             'item_number' => $this->itemNumber,
             'subtotal' => $this->subtotal,
+            'tax_rate' => $this->taxRate,
             'tax_total' => $this->taxTotal,
             'total' => $this->total,
         ]);
@@ -129,6 +143,7 @@ class CreditMemoUnit implements CreditMemoUnitInterface
             $data['variant_options'],
             $data['item_number'],
             $data['subtotal'],
+            $data['tax_rate'],
             $data['tax_total'],
             $data['total']
         );

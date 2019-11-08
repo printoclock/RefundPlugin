@@ -18,6 +18,8 @@ interface CreditMemoUnitInterface
 
     public function getSubtotal(): int;
 
+    public function getTaxRate(): ?float;
+
     public function getTaxTotal(): int;
 
     public function getTotal(): int;
