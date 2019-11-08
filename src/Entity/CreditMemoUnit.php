@@ -143,7 +143,7 @@ class CreditMemoUnit implements CreditMemoUnitInterface
             $data['variant_options'],
             $data['item_number'],
             $data['subtotal'],
-            $data['tax_rate'],
+            (isset($data['tax_rate'])) ? $data['tax_rate'] : null,
             $data['tax_total'],
             $data['total']
         );
