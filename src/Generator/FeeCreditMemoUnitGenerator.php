@@ -39,13 +39,7 @@ final class FeeCreditMemoUnitGenerator implements CreditMemoUnitGeneratorInterfa
             );
         }
 
-//        Assert::notNull($extra);
-
-//        /** @var OrderItemUnitInterface $orderItemUnit */
-//        $orderItemUnit = $this->orderItemUnitRepository->find($extra);
-//        Assert::notNull($orderItemUnit);
-
-        $taxRate = 0.2;//($orderItemUnit->getTaxRate() !== null) ? $orderItemUnit->getTaxRate() : ($orderItemUnit->getTaxTotal() / (float) ($orderItemUnit->getTotal() - $orderItemUnit->getTaxTotal()));
+        $taxRate = 0.2;
         $taxTotal = (int) (($amount / (1 + $taxRate)) * $taxRate);
 
         return new CreditMemoUnit(
