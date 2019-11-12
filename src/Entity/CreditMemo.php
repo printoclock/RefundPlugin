@@ -177,6 +177,8 @@ class CreditMemo implements CreditMemoInterface
             $taxItems['default'] = 0;
         }
 
+        ksort($taxItems);
+
         return $taxItems;
     }
 
