@@ -156,7 +156,7 @@ class CreditMemo implements CreditMemoInterface
         return $units;
     }
 
-    public function getTaxItems(float $defaultTaxRate = 0.2): array
+    public function getTaxItemsByTaxRate(float $defaultTaxRate = 0.2): array
     {
         $taxItems = [];
 
@@ -175,6 +175,30 @@ class CreditMemo implements CreditMemoInterface
 
         if (empty($taxItems)) {
             $taxItems['default'] = 0;
+        }
+
+        return $taxItems;
+    }
+
+    public function getTaxItemsByAccountingNumber(string $defaultAccountingNumber = ''): array
+    {
+        $taxItems = [];
+
+        /** @var CreditMemoUnit $unit */
+        foreach ($this->getUnits() as $unit) {
+            if ($unit->getTaxTotal() === 0) continue;
+
+            $accountingNumber = $unit->getTaxAccountingNumber() ?? $defaultAccountingNumber;
+
+            if (!isset($taxItems[$accountingNumber])) {
+                $taxItems[$accountingNumber] = 0;
+            }
+
+            $taxItems[$accountingNumber] += $unit->getTaxTotal();
+        }
+
+        if (empty($taxItems)) {
+            $taxItems[$defaultAccountingNumber] = 0;
         }
 
         return $taxItems;
