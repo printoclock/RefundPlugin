@@ -156,6 +156,30 @@ class CreditMemo implements CreditMemoInterface
         return $units;
     }
 
+    public function getTaxItems(float $defaultTaxRate = 0.2): array
+    {
+        $taxItems = [];
+
+        /** @var CreditMemoUnit $unit */
+        foreach ($this->getUnits() as $unit) {
+            if ($unit->getTaxTotal() === 0) continue;
+
+            $taxRate = sprintf('%.3f', round($unit->getTaxRate() ?? $defaultTaxRate, 3));
+
+            if (!isset($taxItems[$taxRate])) {
+                $taxItems[$taxRate] = 0;
+            }
+
+            $taxItems[$taxRate] += $unit->getTaxTotal();
+        }
+
+        if (empty($taxItems)) {
+            $taxItems['default'] = 0;
+        }
+
+        return $taxItems;
+    }
+
     public function setUnits(array $units): void {
         $this->units = $units;
     }
