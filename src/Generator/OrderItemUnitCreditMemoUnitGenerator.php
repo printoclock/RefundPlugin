@@ -46,7 +46,8 @@ final class OrderItemUnitCreditMemoUnitGenerator implements CreditMemoUnitGenera
             $amount - $taxTotal,
             $taxRate,
             $taxTotal,
-            $amount
+            $amount,
+            $orderItemUnit->getTaxAccountingNumber()
         );
     }
 }

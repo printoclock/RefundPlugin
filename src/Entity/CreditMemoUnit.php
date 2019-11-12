@@ -34,7 +34,10 @@ class CreditMemoUnit implements CreditMemoUnitInterface
     /** @var int */
     private $total;
 
-    public function __construct(string $type, string $productName, ?string $variantCode, array $variantOptions, ?string $itemNumber, int $subtotal, ?float $taxRate, int $taxTotal, int $total)
+    /** @var string|null */
+    protected $taxAccountingNumber;
+
+    public function __construct(string $type, string $productName, ?string $variantCode, array $variantOptions, ?string $itemNumber, int $subtotal, ?float $taxRate, int $taxTotal, int $total, ?string $taxAccountingNumber)
     {
         $this->type = $type;
         $this->productName = $productName;
@@ -45,6 +48,7 @@ class CreditMemoUnit implements CreditMemoUnitInterface
         $this->taxRate = $taxRate;
         $this->taxTotal = $taxTotal;
         $this->total = $total;
+        $this->taxAccountingNumber = $taxAccountingNumber;
     }
 
     public function getType(): string
@@ -111,6 +115,16 @@ class CreditMemoUnit implements CreditMemoUnitInterface
         $this->total = $total;
     }
 
+    public function getTaxAccountingNumber(): ?string
+    {
+        return $this->taxAccountingNumber;
+    }
+
+    public function setTaxAccountingNumber(?string $taxAccountingNumber): void
+    {
+        $this->taxAccountingNumber = $taxAccountingNumber;
+    }
+
     public function serialize(): string
     {
         $serialized = json_encode([
@@ -123,6 +137,7 @@ class CreditMemoUnit implements CreditMemoUnitInterface
             'tax_rate' => $this->taxRate,
             'tax_total' => $this->taxTotal,
             'total' => $this->total,
+            'tax_accounting_number' => $this->taxAccountingNumber,
         ]);
 
         if ($serialized === false) {
@@ -145,7 +160,8 @@ class CreditMemoUnit implements CreditMemoUnitInterface
             $data['subtotal'],
             (isset($data['tax_rate'])) ? $data['tax_rate'] : null,
             $data['tax_total'],
-            $data['total']
+            $data['total'],
+            (isset($data['tax_accounting_number'])) ? $data['tax_accounting_number'] : null
         );
     }
 }
