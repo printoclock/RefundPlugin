@@ -33,6 +33,8 @@ final class GenerateCreditMemoHandler
 
     public function __invoke(GenerateCreditMemo $command): void
     {
+        if ($command->total() <= 0) return;
+
         $orderNumber = $command->orderNumber();
 
         $creditMemo = $this->creditMemoGenerator->generate(
