@@ -69,7 +69,7 @@ final class RefundUnitsHandler
         $refundedTotal += $this->orderUnitsRefunder->refundFromOrder($command->units(), $orderNumber);
         $refundedTotal += $this->orderShipmentsRefunder->refundFromOrder($command->shipments(), $orderNumber);
         $refundedTotal += $this->orderPaymentsRefunder->refundFromOrder($command->payments(), $orderNumber);
-        $refundedTotal += $this->orderFeesRefunder->refundFromOrder($this->getFees($command->fees()), $orderNumber);
+        $refundedTotal += $this->orderFeesRefunder->refundFromOrder($this->getRefundFees($command->fees()), $orderNumber);
         $refundedTotal += $refundedExtraFeeTotal;
 
         $this->eventBus->dispatch(new UnitsRefunded(
@@ -89,7 +89,7 @@ final class RefundUnitsHandler
         ));
     }
 
-    protected function getFees(array $fees): array {
+    protected function getRefundFees(array $fees): array {
         $result = [];
 
         /** @var FeeRefund $fee */
