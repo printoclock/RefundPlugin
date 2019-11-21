@@ -121,7 +121,11 @@ final class RefundUnitsCommandCreator implements RefundUnitsCommandCreatorInterf
             }
 
             $id = (int) $refundFee['id'];
-            $total = $this->remainingTotalProvider->getTotalLeftToRefund($id, RefundType::fee(), $orderNumber);
+            if ($id < 1000) {
+                throw new \InvalidArgumentException('Wrong fee unit id');
+            }
+
+            $total = $this->remainingTotalProvider->getTotalLeftToRefund($id / 1000, RefundType::fee(), $orderNumber);
 
             return new FeeRefund($id, $total);
         }, $units);
