@@ -34,21 +34,31 @@
                 </thead>
                 <tbody>
                 {% for unit in credit_memo.units %}
-                    <tr>
-                        <td class="single line credit-memo-unit-product-name">
-                            {% if unit.type == 'fee' %}
-                                {{ ('sylius.ui.credit_memo.fees.' ~ unit.productName)|trans }}
-                            {% else %}
-                                {{ unit.productName }}
-                            {% endif %}
-                        </td>
-                        <td class="right aligned credit-memo-unit-taxes-total">
-                            {{ money.format(unit.taxTotal, credit_memo.currencyCode) }}
-                        </td>
-                        <td class="right aligned credit-memo-unit-total">
-                            {{ money.format(unit.total, credit_memo.currencyCode) }}
-                        </td>
-                    </tr>
+                    {% set isItem = (unit.type == constant('Sylius\\RefundPlugin\\Model\\RefundType::ORDER_ITEM_UNIT')) %}
+                    {% set isShipment = (unit.type == constant('Sylius\\RefundPlugin\\Model\\RefundType::SHIPMENT')) %}
+                    {% set isPayment = (unit.type == constant('Sylius\\RefundPlugin\\Model\\RefundType::PAYMENT')) %}
+                    {% set isFee = (unit.type == constant('Sylius\\RefundPlugin\\Model\\RefundType::FEE') and (unit.productName|number_format(0, '', '')) >= 1000) %}
+                    {% set isExtraFee = (unit.type == constant('Sylius\\RefundPlugin\\Model\\RefundType::FEE') and (unit.productName|number_format(0, '', '')) < 1000) %}
+
+                    {% if isItem or unit.total != 0 %}
+                        <tr>
+                            <td class="single line credit-memo-unit-product-name">
+                                {% if isFee %}
+                                    {{ ('sylius.ui.credit_memo.fees.' ~ ((unit.productName|number_format(0, '', '')) / 1000))|trans }}
+                                {% elseif isExtraFee %}
+                                    {{ ('sylius.ui.credit_memo.fees.' ~ (unit.productName|number_format(0, '', '')))|trans }}
+                                {% else %}
+                                    {{ unit.productName }}
+                                {% endif %}
+                            </td>
+                            <td class="right aligned credit-memo-unit-taxes-total">
+                                {{ money.format(unit.taxTotal, credit_memo.currencyCode) }}
+                            </td>
+                            <td class="right aligned credit-memo-unit-total">
+                                {{ money.format(unit.total, credit_memo.currencyCode) }}
+                            </td>
+                        </tr>
+                    {% endif %}
                 {% endfor %}
                 </tbody>
                 <tfoot>
