@@ -8,6 +8,7 @@ use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Repository\OrderRepositoryInterface;
 use Sylius\RefundPlugin\Command\RefundUnits;
 use Sylius\RefundPlugin\Event\UnitsRefunded;
+use Sylius\RefundPlugin\Model\FeeRefund;
 use Sylius\RefundPlugin\Refunder\RefunderInterface;
 use Sylius\RefundPlugin\Validator\RefundUnitsCommandValidatorInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -62,13 +63,14 @@ final class RefundUnitsHandler
         /** @var OrderInterface $order */
         $order = $this->orderRepository->findOneByNumber($orderNumber);
 
-        $refundedFeeTotal = $this->orderFeesRefunder->refundFromOrder($command->fees(), $orderNumber);
+        $refundedExtraFeeTotal = $this->orderFeesRefunder->refundFromOrder($this->getExtraFees($command->fees()), $orderNumber);
 
         $refundedTotal = 0;
         $refundedTotal += $this->orderUnitsRefunder->refundFromOrder($command->units(), $orderNumber);
         $refundedTotal += $this->orderShipmentsRefunder->refundFromOrder($command->shipments(), $orderNumber);
         $refundedTotal += $this->orderPaymentsRefunder->refundFromOrder($command->payments(), $orderNumber);
-        $refundedTotal += $refundedFeeTotal;
+        $refundedTotal += $this->orderFeesRefunder->refundFromOrder($this->getFees($command->fees()), $orderNumber);
+        $refundedTotal += $refundedExtraFeeTotal;
 
         $this->eventBus->dispatch(new UnitsRefunded(
             $command->token() ?? bin2hex(random_bytes(16)),
@@ -79,11 +81,37 @@ final class RefundUnitsHandler
             $command->fees(),
             $command->paymentMethodId(),
             $refundedTotal,
-            $refundedFeeTotal,
+            $refundedExtraFeeTotal,
             $order->getCurrencyCode(),
             $command->payedAt(),
             $command->reference(),
             $command->comment()
         ));
+    }
+
+    protected function getFees(array $fees): array {
+        $result = [];
+
+        /** @var FeeRefund $fee */
+        foreach ($fees as $fee) {
+            if ($fee->id() >= 1000) {
+                $result[] = $fee;
+            }
+        }
+
+        return $result;
+    }
+
+    protected function getExtraFees(array $fees): array {
+        $result = [];
+
+        /** @var FeeRefund $fee */
+        foreach ($fees as $fee) {
+            if ($fee->id() < 1000) {
+                $result[] = $fee;
+            }
+        }
+
+        return $result;
     }
 }

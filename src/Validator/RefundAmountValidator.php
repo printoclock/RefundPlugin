@@ -19,22 +19,26 @@ final class RefundAmountValidator implements RefundAmountValidatorInterface
         $this->remainingTotalProvider = $unitRefundedTotalProvider;
     }
 
-    public function validateUnits(array $unitRefunds, RefundType $refundType): void
+    public function validateUnits(array $unitRefunds, RefundType $refundType, ?string $orderNumber = null): void
     {
         /** @var UnitRefundInterface $unitRefund */
         foreach ($unitRefunds as $unitRefund) {
-            if ($unitRefund->total() <= 0) {
-                throw InvalidRefundAmountException::withValidationConstraint(
-                    RefundUnitsValidationConstraintMessages::REFUND_AMOUNT_MUST_BE_GREATER_THAN_ZERO
-                );
+            if ($refundType->equals(RefundType::fee())) {
+                if ($unitRefund->id() < 1000) continue;
             }
 
-            $unitRefundedTotal = $this->remainingTotalProvider->getTotalLeftToRefund($unitRefund->id(), $refundType);
+            if ($unitRefund->total() <= 0) {
+                throw InvalidRefundAmountException::withValidationConstraint(RefundUnitsValidationConstraintMessages::REFUND_AMOUNT_MUST_BE_GREATER_THAN_ZERO);
+            }
+
+            $unitRefundedTotal = $this->remainingTotalProvider->getTotalLeftToRefund(
+                ($refundType->equals(RefundType::fee())) ? $unitRefund->id() / 1000 : $unitRefund->id(),
+                $refundType,
+                $orderNumber
+            );
 
             if ($unitRefund->total() > $unitRefundedTotal) {
-                throw InvalidRefundAmountException::withValidationConstraint(
-                    RefundUnitsValidationConstraintMessages::REFUND_AMOUNT_MUST_BE_LESS_THAN_AVAILABLE
-                );
+                throw InvalidRefundAmountException::withValidationConstraint(RefundUnitsValidationConstraintMessages::REFUND_AMOUNT_MUST_BE_LESS_THAN_AVAILABLE);
             }
         }
     }

@@ -30,21 +30,23 @@ final class RefundUnitsCommandCreator implements RefundUnitsCommandCreatorInterf
             throw new \InvalidArgumentException('Refunded order number not provided');
         }
 
+        $orderNumber = $request->attributes->get('orderNumber');
+
         $units = $this->filterEmptyRefundUnits($request->request->get('sylius_refund_units', []));
         $shipments = $this->filterEmptyRefundUnits($request->request->get('sylius_refund_shipments', []));
         $payments = $this->filterEmptyRefundUnits($request->request->get('sylius_refund_payments', []));
         $fees = $this->filterEmptyRefundUnits($request->request->get('sylius_refund_fees', []));
 
-        if (count($units) === 0 && count($shipments) === 0) {
+        if (count($units) === 0 && count($shipments) === 0 && count($payments) === 0 && count($fees) === 0) {
             throw new \InvalidArgumentException('sylius_refund.at_least_one_unit_should_be_selected_to_refund');
         }
 
         return new RefundUnits(
-            $request->attributes->get('orderNumber'),
-            $this->parseIdsToUnitRefunds($units),
-            $this->parseIdsToShipmentRefunds($shipments),
-            $this->parseIdsToPaymentRefunds($payments),
-            $this->parseIdsToFeeRefunds($fees),
+            $orderNumber,
+            $this->parseIdsToUnitRefunds($units, $orderNumber),
+            $this->parseIdsToShipmentRefunds($shipments, $orderNumber),
+            $this->parseIdsToPaymentRefunds($payments, $orderNumber),
+            $this->parseIdsToFeeRefunds($fees, $orderNumber),
             (int) $request->request->get('sylius_refund_payment_method'),
             $request->request->get('sylius_refund_date'),
             $request->request->get('sylius_refund_reference'),
@@ -53,14 +55,9 @@ final class RefundUnitsCommandCreator implements RefundUnitsCommandCreatorInterf
         );
     }
 
-    /**
-     * Parse unit id's to UnitRefund with id and remaining total or amount passed in request
-     *
-     * @return array|UnitRefundInterface[]
-     */
-    private function parseIdsToUnitRefunds(array $units): array
+    private function parseIdsToUnitRefunds(array $units, string $orderNumber): array
     {
-        return array_map(function (array $refundUnit): UnitRefundInterface {
+        return array_map(function (array $refundUnit) use ($orderNumber) : UnitRefundInterface {
             if (isset($refundUnit['amount']) && $refundUnit['amount'] !== '') {
                 $id = (int) $refundUnit['partial-id'];
                 $total = (int) (((float) $refundUnit['amount']) * 100);
@@ -69,20 +66,15 @@ final class RefundUnitsCommandCreator implements RefundUnitsCommandCreatorInterf
             }
 
             $id = (int) $refundUnit['id'];
-            $total = $this->remainingTotalProvider->getTotalLeftToRefund($id, RefundType::orderItemUnit());
+            $total = $this->remainingTotalProvider->getTotalLeftToRefund($id, RefundType::orderItemUnit(), $orderNumber);
 
             return new OrderItemUnitRefund($id, $total);
         }, $units);
     }
 
-    /**
-     * Parse shipment id's to ShipmentRefund with id and remaining total or amount passed in request
-     *
-     * @return array|UnitRefundInterface[]
-     */
-    private function parseIdsToShipmentRefunds(array $units): array
+    private function parseIdsToShipmentRefunds(array $units, string $orderNumber): array
     {
-        return array_map(function (array $refundShipment): UnitRefundInterface {
+        return array_map(function (array $refundShipment) use ($orderNumber) : UnitRefundInterface {
             if (isset($refundShipment['amount']) && $refundShipment['amount'] !== '') {
                 $id = (int) $refundShipment['partial-id'];
                 $total = (int) (((float) $refundShipment['amount']) * 100);
@@ -91,20 +83,15 @@ final class RefundUnitsCommandCreator implements RefundUnitsCommandCreatorInterf
             }
 
             $id = (int) $refundShipment['id'];
-            $total = $this->remainingTotalProvider->getTotalLeftToRefund($id, RefundType::shipment());
+            $total = $this->remainingTotalProvider->getTotalLeftToRefund($id, RefundType::shipment(), $orderNumber);
 
             return new ShipmentRefund($id, $total);
         }, $units);
     }
 
-    /**
-     * Parse payment id's to PaymentRefund with id and remaining total or amount passed in request
-     *
-     * @return array|UnitRefundInterface[]
-     */
-    private function parseIdsToPaymentRefunds(array $units): array
+    private function parseIdsToPaymentRefunds(array $units, string $orderNumber): array
     {
-        return array_map(function (array $refundPayment): UnitRefundInterface {
+        return array_map(function (array $refundPayment) use ($orderNumber) : UnitRefundInterface {
             if (isset($refundPayment['amount']) && $refundPayment['amount'] !== '') {
                 $id = (int) $refundPayment['partial-id'];
                 $total = (int) (((float) $refundPayment['amount']) * 100);
@@ -113,30 +100,30 @@ final class RefundUnitsCommandCreator implements RefundUnitsCommandCreatorInterf
             }
 
             $id = (int) $refundPayment['id'];
-            $total = $this->remainingTotalProvider->getTotalLeftToRefund($id, RefundType::payment());
+            $total = $this->remainingTotalProvider->getTotalLeftToRefund($id, RefundType::payment(), $orderNumber);
 
             return new PaymentRefund($id, $total);
         }, $units);
     }
 
-    /**
-     * Parse unit id's to FeeRefund with id
-     *
-     * @return array|UnitRefundInterface[]
-     */
-    private function parseIdsToFeeRefunds(array $units): array
+    private function parseIdsToFeeRefunds(array $units, string $orderNumber): array
     {
-        return array_filter(array_map(function (array $refundFee): UnitRefundInterface {
+        return array_filter(array_map(function (array $refundFee) use ($orderNumber) : UnitRefundInterface {
             if (isset($refundFee['amount']) && $refundFee['amount'] !== '') {
                 $id = (int) $refundFee['partial-id'];
-                $total = (int) (((float) $refundFee['amount']) * -100);
+                $total = (int) (((float) $refundFee['amount']) * 100);
+
+                if ($id < 1000) {
+                    $total *= -1;
+                }
 
                 return new FeeRefund($id, $total);
             }
 
             $id = (int) $refundFee['id'];
+            $total = $this->remainingTotalProvider->getTotalLeftToRefund($id, RefundType::fee(), $orderNumber);
 
-            return new FeeRefund($id, 0);
+            return new FeeRefund($id, $total);
         }, $units), function (FeeRefund $feeRefund) {
             return ($feeRefund->total() < 0);
         });
@@ -145,10 +132,7 @@ final class RefundUnitsCommandCreator implements RefundUnitsCommandCreatorInterf
     private function filterEmptyRefundUnits(array $units): array
     {
         return array_filter($units, function (array $refundUnit): bool {
-            return
-                (isset($refundUnit['amount']) && $refundUnit['amount'] !== '')
-                || isset($refundUnit['id'])
-            ;
+            return (isset($refundUnit['amount']) && $refundUnit['amount'] !== '') || isset($refundUnit['id']);
         });
     }
 }

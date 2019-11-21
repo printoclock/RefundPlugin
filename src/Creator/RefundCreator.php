@@ -33,11 +33,12 @@ final class RefundCreator implements RefundCreatorInterface
 
     public function __invoke(string $orderNumber, int $unitId, int $amount, RefundType $refundType): void
     {
-        if (!$refundType->equals(RefundType::fee())) {
-            $remainingTotal = $this->remainingTotalProvider->getTotalLeftToRefund($unitId, $refundType);
+        if (!$refundType->equals(RefundType::fee()) || $unitId >= 1000) {
+            $refundUnitId = $refundType->equals(RefundType::fee()) ? $unitId / 1000 : $unitId;
+            $remainingTotal = $this->remainingTotalProvider->getTotalLeftToRefund($refundUnitId, $refundType, $orderNumber);
 
             if ($remainingTotal === 0) {
-                throw UnitAlreadyRefundedException::withIdAndOrderNumber($unitId, $orderNumber);
+                throw UnitAlreadyRefundedException::withIdAndOrderNumber($refundUnitId, $orderNumber);
             }
         }
 
