@@ -9,6 +9,7 @@ use Sylius\Component\Core\Repository\OrderRepositoryInterface;
 use Sylius\RefundPlugin\Command\RefundUnits;
 use Sylius\RefundPlugin\Event\UnitsRefunded;
 use Sylius\RefundPlugin\Model\FeeRefund;
+use Sylius\RefundPlugin\Model\UnitRefundInterface;
 use Sylius\RefundPlugin\Refunder\RefunderInterface;
 use Sylius\RefundPlugin\Validator\RefundUnitsCommandValidatorInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -63,6 +64,8 @@ final class RefundUnitsHandler
         /** @var OrderInterface $order */
         $order = $this->orderRepository->findOneByNumber($orderNumber);
 
+        $this->validate($command);
+
         $refundedExtraFeeTotal = $this->orderFeesRefunder->refundFromOrder($this->getExtraFees($command->fees()), $orderNumber);
 
         $refundedTotal = 0;
@@ -71,10 +74,6 @@ final class RefundUnitsHandler
         $refundedTotal += $this->orderPaymentsRefunder->refundFromOrder($command->payments(), $orderNumber);
         $refundedTotal += $this->orderFeesRefunder->refundFromOrder($this->getRefundFees($command->fees()), $orderNumber);
         $refundedTotal += $refundedExtraFeeTotal;
-
-        if ($refundedTotal <= abs($refundedExtraFeeTotal)) {
-            throw new \LogicException('The total fee should be less than the total to refund');
-        }
 
         $this->eventBus->dispatch(new UnitsRefunded(
             $command->token() ?? bin2hex(random_bytes(16)),
@@ -91,6 +90,28 @@ final class RefundUnitsHandler
             $command->reference(),
             $command->comment()
         ));
+    }
+
+    protected function validate(RefundUnits $command) {
+        $total = $this->totalUnits($command->units());
+        $total += $this->totalUnits($command->shipments());
+        $total += $this->totalUnits($command->payments());
+        $total += $this->totalUnits($this->getRefundFees($command->fees()));
+
+        if ($total <= abs($this->totalUnits($this->getExtraFees($command->fees())))) {
+            throw new \LogicException('The total fee should be less than the total to refund');
+        }
+    }
+
+    protected function totalUnits(array $units): int {
+        $total = 0;
+
+        /** @var UnitRefundInterface $unit */
+        foreach ($units as $unit) {
+            $total += $unit->total();
+        }
+
+        return $total;
     }
 
     protected function getRefundFees(array $fees): array {
