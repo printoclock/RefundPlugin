@@ -66,13 +66,13 @@ final class OrderRefundsExtension extends \Twig_Extension
         ];
     }
 
-    public function canUnitBeRefunded(int $unitId, string $refundType): bool
+    public function canUnitBeRefunded(int $unitId, string $refundType, ?string $orderNumber = null): bool
     {
-        return $this->unitRefundingAvailabilityChecker->__invoke($unitId, new RefundType($refundType));
+        return $this->unitRefundingAvailabilityChecker->__invoke($unitId, new RefundType($refundType), $orderNumber);
     }
 
-    public function getUnitRefundedTotal(int $unitId, string $refundType): int
+    public function getUnitRefundedTotal(int $unitId, string $refundType, ?string $orderNumber = null): int
     {
-        return $this->unitRefundedTotalProvider->__invoke($unitId, new RefundType($refundType));
+        return $this->unitRefundedTotalProvider->__invoke($unitId, new RefundType($refundType), $orderNumber);
     }
 }

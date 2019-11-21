@@ -8,5 +8,5 @@ use Sylius\RefundPlugin\Model\RefundType;
 
 interface UnitRefundingAvailabilityCheckerInterface
 {
-    public function __invoke(int $unitId, RefundType $refundType): bool;
+    public function __invoke(int $unitId, RefundType $refundType, ?string $orderNumber = null): bool;
 }

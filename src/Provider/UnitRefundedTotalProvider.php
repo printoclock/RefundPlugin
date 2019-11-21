@@ -18,9 +18,14 @@ final class UnitRefundedTotalProvider implements UnitRefundedTotalProviderInterf
         $this->refundRepository = $refundRepository;
     }
 
-    public function __invoke(int $unitId, RefundType $type): int
+    public function __invoke(int $unitId, RefundType $type, ?string $orderNumber = null): int
     {
-        $refunds = $this->refundRepository->findBy(['refundedUnitId' => $unitId, 'type' => $type->__toString()]);
+        $params = ['refundedUnitId' => $unitId, 'type' => $type->__toString()];
+        if (!empty($orderNumber)) {
+            $params['orderNumber'] = $orderNumber;
+        }
+
+        $refunds = $this->refundRepository->findBy($params);
 
         $refundedTotal = 0;
         /** @var RefundInterface $refund */

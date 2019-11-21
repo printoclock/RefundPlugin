@@ -18,8 +18,8 @@ final class UnitRefundingAvailabilityChecker implements UnitRefundingAvailabilit
         $this->remainingTotalProvider = $remainingTotalProvider;
     }
 
-    public function __invoke(int $unitId, RefundType $refundType): bool
+    public function __invoke(int $unitId, RefundType $refundType, ?string $orderNumber = null): bool
     {
-        return $this->remainingTotalProvider->getTotalLeftToRefund($unitId, $refundType) > 0;
+        return $this->remainingTotalProvider->getTotalLeftToRefund($unitId, $refundType, $orderNumber) > 0;
     }
 }

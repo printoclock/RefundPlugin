@@ -8,5 +8,5 @@ use Sylius\RefundPlugin\Model\RefundType;
 
 interface UnitRefundedTotalProviderInterface
 {
-    public function __invoke(int $unitId, RefundType $type): int;
+    public function __invoke(int $unitId, RefundType $type, ?string $orderNumber = null): int;
 }

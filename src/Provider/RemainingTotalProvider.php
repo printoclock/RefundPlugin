@@ -33,10 +33,15 @@ final class RemainingTotalProvider implements RemainingTotalProviderInterface
         $this->refundRepository = $refundRepository;
     }
 
-    public function getTotalLeftToRefund(int $id, RefundType $type): int
+    public function getTotalLeftToRefund(int $id, RefundType $type, ?string $orderNumber = null): int
     {
-        $unitTotal = $this->getRefundUnitTotal($id, $type);
-        $refunds = $this->refundRepository->findBy(['refundedUnitId' => $id, 'type' => $type->__toString()]);
+        $params = ['refundedUnitId' => $id, 'type' => $type->__toString()];
+        if (!empty($orderNumber)) {
+            $params['orderNumber'] = $orderNumber;
+        }
+
+        $unitTotal = $this->getRefundUnitTotal($id, $type, $orderNumber);
+        $refunds = $this->refundRepository->findBy($params);
 
         if (count($refunds) === 0) {
             return $unitTotal;
@@ -51,7 +56,7 @@ final class RemainingTotalProvider implements RemainingTotalProviderInterface
         return $unitTotal - $refundedTotal;
     }
 
-    private function getRefundUnitTotal(int $id, RefundType $refundType): int
+    private function getRefundUnitTotal(int $id, RefundType $refundType, ?string $orderNumber = null): int
     {
         if ($refundType->equals(RefundType::orderItemUnit())) {
             /** @var OrderItemUnitInterface $orderItemUnit */

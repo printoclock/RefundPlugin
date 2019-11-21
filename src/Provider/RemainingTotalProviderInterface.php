@@ -8,5 +8,5 @@ use Sylius\RefundPlugin\Model\RefundType;
 
 interface RemainingTotalProviderInterface
 {
-    public function getTotalLeftToRefund(int $id, RefundType $type): int;
+    public function getTotalLeftToRefund(int $id, RefundType $type, ?string $orderNumber = null): int;
 }
