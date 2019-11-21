@@ -72,6 +72,10 @@ final class RefundUnitsHandler
         $refundedTotal += $this->orderFeesRefunder->refundFromOrder($this->getRefundFees($command->fees()), $orderNumber);
         $refundedTotal += $refundedExtraFeeTotal;
 
+        if ($refundedTotal <= abs($refundedExtraFeeTotal)) {
+            throw new \LogicException('The total fee should be less than the total to refund');
+        }
+
         $this->eventBus->dispatch(new UnitsRefunded(
             $command->token() ?? bin2hex(random_bytes(16)),
             $orderNumber,
