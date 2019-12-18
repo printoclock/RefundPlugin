@@ -206,6 +206,28 @@ class CreditMemo implements CreditMemoInterface
         return $taxItems;
     }
 
+    public function getLineItemsByAccountingNumber(string $defaultAccountingNumber = ''): array
+    {
+        $lineItems = [];
+
+        /** @var CreditMemoUnit $unit */
+        foreach ($this->getUnits() as $unit) {
+            $accountingNumber = $unit->getServicesAccountingNumber() ?? $defaultAccountingNumber;
+
+            if (!isset($lineItems[$accountingNumber])) {
+                $lineItems[$accountingNumber] = 0;
+            }
+
+            $lineItems[$accountingNumber] += $unit->getSubtotal();
+        }
+
+        if (empty($lineItems)) {
+            $lineItems[$defaultAccountingNumber] = 0;
+        }
+
+        return $lineItems;
+    }
+
     public function setUnits(array $units): void {
         $this->units = $units;
     }
