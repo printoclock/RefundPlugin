@@ -35,9 +35,12 @@ class CreditMemoUnit implements CreditMemoUnitInterface
     private $total;
 
     /** @var string|null */
+    protected $servicesAccountingNumber;
+
+    /** @var string|null */
     protected $taxAccountingNumber;
 
-    public function __construct(string $type, string $productName, ?string $variantCode, array $variantOptions, ?string $itemNumber, int $subtotal, ?float $taxRate, int $taxTotal, int $total, ?string $taxAccountingNumber)
+    public function __construct(string $type, string $productName, ?string $variantCode, array $variantOptions, ?string $itemNumber, int $subtotal, ?float $taxRate, int $taxTotal, int $total, ?string $servicesAccountingNumber, ?string $taxAccountingNumber)
     {
         $this->type = $type;
         $this->productName = $productName;
@@ -48,6 +51,7 @@ class CreditMemoUnit implements CreditMemoUnitInterface
         $this->taxRate = $taxRate;
         $this->taxTotal = $taxTotal;
         $this->total = $total;
+        $this->servicesAccountingNumber = $servicesAccountingNumber;
         $this->taxAccountingNumber = $taxAccountingNumber;
     }
 
@@ -115,6 +119,16 @@ class CreditMemoUnit implements CreditMemoUnitInterface
         $this->total = $total;
     }
 
+    public function getServicesAccountingNumber(): ?string
+    {
+        return $this->servicesAccountingNumber;
+    }
+
+    public function setServicesAccountingNumber(?string $servicesAccountingNumber): void
+    {
+        $this->servicesAccountingNumber = $servicesAccountingNumber;
+    }
+
     public function getTaxAccountingNumber(): ?string
     {
         return $this->taxAccountingNumber;
@@ -137,6 +151,7 @@ class CreditMemoUnit implements CreditMemoUnitInterface
             'tax_rate' => $this->taxRate,
             'tax_total' => $this->taxTotal,
             'total' => $this->total,
+            'services_accounting_number' => $this->servicesAccountingNumber,
             'tax_accounting_number' => $this->taxAccountingNumber,
         ]);
 
@@ -161,6 +176,7 @@ class CreditMemoUnit implements CreditMemoUnitInterface
             (isset($data['tax_rate'])) ? $data['tax_rate'] : null,
             $data['tax_total'],
             $data['total'],
+            (isset($data['services_accounting_number'])) ? $data['services_accounting_number'] : null,
             (isset($data['tax_accounting_number'])) ? $data['tax_accounting_number'] : null
         );
     }

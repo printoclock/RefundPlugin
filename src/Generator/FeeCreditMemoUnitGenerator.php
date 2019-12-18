@@ -35,6 +35,7 @@ final class FeeCreditMemoUnitGenerator implements CreditMemoUnitGeneratorInterfa
                 null,
                 0,
                 0,
+                null,
                 null
             );
         }
@@ -52,6 +53,7 @@ final class FeeCreditMemoUnitGenerator implements CreditMemoUnitGeneratorInterfa
             $taxRate,
             $taxTotal,
             $amount,
+            null,
             null
         );
     }

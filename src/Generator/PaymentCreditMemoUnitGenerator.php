@@ -35,6 +35,7 @@ final class PaymentCreditMemoUnitGenerator implements CreditMemoUnitGeneratorInt
             null,
             0,
             $amount,
+            null,
             null
         );
     }
