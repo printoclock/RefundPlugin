@@ -34,8 +34,10 @@ final class OrderItemUnitCreditMemoUnitGenerator implements CreditMemoUnitGenera
 
         $variant = $orderItem->getVariant();
 
-        $taxRate = ($orderItemUnit->getTaxRate() !== null) ? $orderItemUnit->getTaxRate() : ($orderItemUnit->getTaxTotal() / (float) ($orderItemUnit->getTotal() - $orderItemUnit->getTaxTotal()));
-        $taxTotal = ($amount === $orderItemUnit->getTotal()) ? $orderItemUnit->getTaxTotal() : (int) (($amount / (1 + $taxRate)) * $taxRate);
+        $orderItemUnitSubTotal = $orderItemUnit->getTotal() - $orderItemUnit->getTaxTotal();
+
+        $taxRate = ($orderItemUnit->getTaxRate() !== null) ? $orderItemUnit->getTaxRate() : (($orderItemUnitSubTotal > 0) ? $orderItemUnit->getTaxTotal() / (float) $orderItemUnitSubTotal : null);
+        $taxTotal = ($amount === $orderItemUnit->getTotal()) ? $orderItemUnit->getTaxTotal() : (($taxRate !== null) ? (int) (($amount / (1 + $taxRate)) * $taxRate) : 0);
 
         return new CreditMemoUnit(
             RefundType::ORDER_ITEM_UNIT,
