@@ -52,6 +52,18 @@ class CreditMemo implements CreditMemoInterface
     /** @var string */
     private $paymentMethod;
 
+    /** @var int */
+    protected $retainedFeeShipping = 0;
+
+    /** @var int */
+    protected $retainedFeePayment = 0;
+
+    /** @var int */
+    protected $retainedFeePacking = 0;
+
+    /** @var int */
+    protected $retainedFeeProduct = 0;
+
     public function __construct(
         string $id,
         string $token,
@@ -67,7 +79,11 @@ class CreditMemo implements CreditMemoInterface
         \DateTimeInterface $issuedAt,
         string $billingData,
         string $shopBillingData,
-        string $paymentMethod
+        string $paymentMethod,
+        int $retainedFeeShipping = 0,
+        int $retainedFeePayment = 0,
+        int $retainedFeePacking = 0,
+        int $retainedFeeProduct = 0
     ) {
         $this->id = $id;
         $this->token = $token;
@@ -84,6 +100,10 @@ class CreditMemo implements CreditMemoInterface
         $this->billingData = $billingData;
         $this->shopBillingData = $shopBillingData;
         $this->paymentMethod = $paymentMethod;
+        $this->retainedFeeShipping = $retainedFeeShipping;
+        $this->retainedFeePayment = $retainedFeePayment;
+        $this->retainedFeePacking = $retainedFeePacking;
+        $this->retainedFeeProduct = $retainedFeeProduct;
     }
 
     public function getId(): string
@@ -271,5 +291,53 @@ class CreditMemo implements CreditMemoInterface
     public function getPaymentMethod(): CreditMemoPaymentMethod
     {
         return CreditMemoPaymentMethod::unserialize($this->paymentMethod);
+    }
+
+    public function getRetainedFeeShipping(): int
+    {
+        return $this->retainedFeeShipping;
+    }
+
+    public function getRetainedFeePayment(): int
+    {
+        return $this->retainedFeePayment;
+    }
+
+    public function getRetainedFeePacking(): int
+    {
+        return $this->retainedFeePacking;
+    }
+
+    public function getRetainedFeeProduct(): int
+    {
+        return $this->retainedFeeProduct;
+    }
+
+    public function setRetainedFeeShipping(int $retainedFeeShipping): self
+    {
+        $this->retainedFeeShipping = $retainedFeeShipping;
+
+        return $this;
+    }
+
+    public function setRetainedFeePayment(int $retainedFeePayment): self
+    {
+        $this->retainedFeePayment = $retainedFeePayment;
+
+        return $this;
+    }
+
+    public function setRetainedFeePacking(int $retainedFeePacking): self
+    {
+        $this->retainedFeePacking = $retainedFeePacking;
+
+        return $this;
+    }
+
+    public function setRetainedFeeProduct(int $retainedFeeProduct): self
+    {
+        $this->retainedFeeProduct = $retainedFeeProduct;
+
+        return $this;
     }
 }

@@ -23,6 +23,26 @@
         <field name="billingData" type="text" />
         <field name="shopBillingData" type="text" />
         <field name="paymentMethod" type="text" />
+        <field name="retainedFeeShipping" column="retained_fee_shipping" nullable="false" type="integer">
+            <options>
+                <option name="default">0</option>
+            </options>
+        </field>
+        <field name="retainedFeePayment" column="retained_fee_payment" nullable="false" type="integer">
+            <options>
+                <option name="default">0</option>
+            </options>
+        </field>
+        <field name="retainedFeePacking" column="retained_fee_packing" nullable="false" type="integer">
+            <options>
+                <option name="default">0</option>
+            </options>
+        </field>
+        <field name="retainedFeeProduct" column="retained_fee_product" nullable="false" type="integer">
+            <options>
+                <option name="default">0</option>
+            </options>
+        </field>
 
         <embedded name="channel" class="Sylius\RefundPlugin\Entity\CreditMemoChannel" />
 
