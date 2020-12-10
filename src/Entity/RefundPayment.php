@@ -78,6 +78,16 @@ class RefundPayment implements RefundPaymentInterface
         $this->comment = $comment;
     }
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function setId(?int $id)
+    {
+        $this->id = $id;
+    }
+
     public function getToken(): string
     {
         return $this->token;
@@ -147,11 +157,6 @@ class RefundPayment implements RefundPaymentInterface
     public function setUpdatedAt(?\DateTimeInterface $updatedAt): void
     {
         $this->updatedAt = $updatedAt;
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
     }
 
     public function getPaymentMethod(): PaymentMethodInterface
