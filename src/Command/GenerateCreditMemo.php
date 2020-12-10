@@ -38,6 +38,9 @@ final class GenerateCreditMemo
     /** @var int */
     private $paymentMethodId;
 
+    /** @var int */
+    protected $feeAmount = 0;
+
     public function __construct(
         string $token,
         string $orderNumber,
@@ -47,7 +50,8 @@ final class GenerateCreditMemo
         array $payments,
         array $fees,
         string $comment,
-        int $paymentMethodId
+        int $paymentMethodId,
+        int $feeAmount = 0
     ) {
         $this->token = $token;
         $this->orderNumber = $orderNumber;
@@ -58,6 +62,7 @@ final class GenerateCreditMemo
         $this->fees = $fees;
         $this->comment = $comment;
         $this->paymentMethodId = $paymentMethodId;
+        $this->feeAmount = $feeAmount;
     }
 
     public function token(): string
@@ -107,5 +112,17 @@ final class GenerateCreditMemo
     public function paymentMethodId(): int
     {
         return $this->paymentMethodId;
+    }
+
+    public function getFeeAmount(): int
+    {
+        return $this->feeAmount;
+    }
+
+    public function setFeeAmount(int $feeAmount): self
+    {
+        $this->feeAmount = $feeAmount;
+
+        return $this;
     }
 }
