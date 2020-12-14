@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sylius\InvoicingPlugin\Entity;
-
-use Sylius\RefundPlugin\Entity\CreditMemoPaymentInterface;
+namespace Sylius\RefundPlugin\Entity;
 
 class CreditMemoPayment implements CreditMemoPaymentInterface
 {
