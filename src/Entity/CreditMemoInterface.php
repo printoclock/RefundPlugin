@@ -22,6 +22,8 @@ interface CreditMemoInterface extends ResourceInterface
 
     public function getChannel(): CreditMemoChannel;
 
+    public function getPayment(): CreditMemoPaymentInterface;
+
     public function getUnits(): array;
 
     public function getComment(): string;

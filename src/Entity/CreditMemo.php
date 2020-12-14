@@ -34,6 +34,9 @@ class CreditMemo implements CreditMemoInterface
     /** @var CreditMemoChannel */
     private $channel;
 
+    /** @var CreditMemoPaymentInterface */
+    protected $payment;
+
     /** @var array */
     private $units;
 
@@ -49,9 +52,6 @@ class CreditMemo implements CreditMemoInterface
     /** @var string */
     private $shopBillingData;
 
-    /** @var string */
-    private $paymentMethod;
-
     public function __construct(
         string $id,
         string $token,
@@ -62,12 +62,12 @@ class CreditMemo implements CreditMemoInterface
         string $currencyCode,
         string $localeCode,
         CreditMemoChannel $channel,
+        CreditMemoPaymentInterface $payment,
         array $units,
         string $comment,
         \DateTimeInterface $issuedAt,
         string $billingData,
-        string $shopBillingData,
-        string $paymentMethod
+        string $shopBillingData
     ) {
         $this->id = $id;
         $this->token = $token;
@@ -78,12 +78,12 @@ class CreditMemo implements CreditMemoInterface
         $this->currencyCode = $currencyCode;
         $this->localeCode = $localeCode;
         $this->channel = $channel;
+        $this->payment = $payment;
         $this->units = $units;
         $this->comment = $comment;
         $this->issuedAt = $issuedAt;
         $this->billingData = $billingData;
         $this->shopBillingData = $shopBillingData;
-        $this->paymentMethod = $paymentMethod;
     }
 
     public function getId(): string
@@ -144,6 +144,16 @@ class CreditMemo implements CreditMemoInterface
     public function getChannel(): CreditMemoChannel
     {
         return $this->channel;
+    }
+
+    public function getPayment(): CreditMemoPaymentInterface
+    {
+        return $this->payment;
+    }
+
+    public function setPayment(CreditMemoPaymentInterface $payment): void
+    {
+        $this->payment = $payment;
     }
 
     public function getUnits(): array
@@ -266,10 +276,5 @@ class CreditMemo implements CreditMemoInterface
     public function getShopBillingData(): CreditMemoBillingData
     {
         return CreditMemoBillingData::unserialize($this->shopBillingData);
-    }
-
-    public function getPaymentMethod(): CreditMemoPaymentMethod
-    {
-        return CreditMemoPaymentMethod::unserialize($this->paymentMethod);
     }
 }

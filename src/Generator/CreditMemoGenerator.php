@@ -9,6 +9,7 @@ use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentMethod ;
 use Sylius\Component\Core\Repository\OrderRepositoryInterface;
 use Sylius\Component\Core\Repository\PaymentMethodRepositoryInterface;
+use Sylius\InvoicingPlugin\Entity\CreditMemoPayment;
 use Sylius\InvoicingPlugin\Entity\Invoice;
 use Sylius\InvoicingPlugin\Repository\InvoiceRepository;
 use Sylius\RefundPlugin\Entity\CreditMemo;
@@ -169,13 +170,9 @@ final class CreditMemoGenerator implements CreditMemoGeneratorInterface
             $invoiceShopBillingData->getCountryCode()
         );
 
-        $paymentMethodData = new CreditMemoPaymentMethod(
-            $paymentMethod->getCode(),
-            $paymentMethod->getName(),
-            $paymentMethod->getInstructions(),
-            null,
-            null
-        );
+        $endOfMonth = (new \DateTime())
+            ->modify('last day of this month')
+            ->setTime(23, 59, 59);
 
         return new CreditMemo(
             $this->uuidCreditMemoIdentifierGenerator->generate(),
@@ -186,13 +183,24 @@ final class CreditMemoGenerator implements CreditMemoGeneratorInterface
             $total,
             $order->getCurrencyCode(),
             $order->getLocaleCode(),
-            new CreditMemoChannel($channel->getCode(), $channel->getName(), $channel->getColor()),
+            new CreditMemoChannel(
+                $channel->getCode(),
+                $channel->getName(),
+                $channel->getColor()
+            ),
+            new CreditMemoPayment(
+                $paymentMethod->getCode(),
+                $paymentMethod->getName(),
+                $paymentMethod->getInstructions(),
+                ($invoice->paymentDueDate() !== null && $invoice->paymentDueDate()->getTimestamp() > $endOfMonth->getTimestamp()) ? $invoice->paymentDueDate() : $endOfMonth,
+                null,
+                null
+            ),
             $creditMemoUnits,
             $comment,
             $this->currentDateTimeProvider->now(),
             $billingData->serialize(),
-            $shopBillingData->serialize(),
-            $paymentMethodData->serialize()
+            $shopBillingData->serialize()
         );
     }
 }
