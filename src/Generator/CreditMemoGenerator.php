@@ -9,14 +9,13 @@ use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\PaymentMethod ;
 use Sylius\Component\Core\Repository\OrderRepositoryInterface;
 use Sylius\Component\Core\Repository\PaymentMethodRepositoryInterface;
-use Sylius\InvoicingPlugin\Entity\CreditMemoPayment;
 use Sylius\InvoicingPlugin\Entity\Invoice;
 use Sylius\InvoicingPlugin\Repository\InvoiceRepository;
 use Sylius\RefundPlugin\Entity\CreditMemo;
 use Sylius\RefundPlugin\Entity\CreditMemoBillingData;
 use Sylius\RefundPlugin\Entity\CreditMemoChannel;
 use Sylius\RefundPlugin\Entity\CreditMemoInterface;
-use Sylius\RefundPlugin\Entity\CreditMemoPaymentMethod;
+use Sylius\RefundPlugin\Entity\CreditMemoPayment;
 use Sylius\RefundPlugin\Exception\InvoiceNotFound;
 use Sylius\RefundPlugin\Exception\OrderNotFound;
 use Sylius\RefundPlugin\Exception\PaymentMethodNotFound;
@@ -189,10 +188,11 @@ final class CreditMemoGenerator implements CreditMemoGeneratorInterface
                 $channel->getColor()
             ),
             new CreditMemoPayment(
+                $paymentMethod->getGatewayConfig()->getFactoryName(),
                 $paymentMethod->getCode(),
                 $paymentMethod->getName(),
                 $paymentMethod->getInstructions(),
-                ($invoice->paymentDueDate() !== null && $invoice->paymentDueDate()->getTimestamp() > $endOfMonth->getTimestamp()) ? $invoice->paymentDueDate() : $endOfMonth,
+                ($invoice->paymentDueDate() === null || $invoice->paymentDueDate()->getTimestamp() < $endOfMonth->getTimestamp()) ? $endOfMonth : $invoice->paymentDueDate(),
                 null,
                 null
             ),

@@ -6,6 +6,10 @@ namespace Sylius\RefundPlugin\Entity;
 
 interface CreditMemoPaymentInterface
 {
+    public function getGateway(): ?string;
+
+    public function setGateway(?string $gateway): void;
+
     public function getCode(): ?string;
 
     public function setCode(?string $code): void;

@@ -6,6 +6,7 @@
                             http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd"
 >
     <embeddable name="Sylius\RefundPlugin\Entity\CreditMemoPayment">
+        <field name="gateway" nullable="true"/>
         <field name="code" nullable="true"/>
         <field name="name" nullable="true"/>
         <field name="instructions" type="text" nullable="true"/>

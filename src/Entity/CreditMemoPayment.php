@@ -7,6 +7,9 @@ namespace Sylius\RefundPlugin\Entity;
 class CreditMemoPayment implements CreditMemoPaymentInterface
 {
     /** @var string|null */
+    protected $gateway;
+
+    /** @var string|null */
     protected $code;
 
     /** @var string|null */
@@ -25,6 +28,7 @@ class CreditMemoPayment implements CreditMemoPaymentInterface
     protected $accountingNumber;
 
     public function __construct(
+        ?string $gateway,
         ?string $code,
         ?string $name,
         ?string $instructions,
@@ -32,12 +36,23 @@ class CreditMemoPayment implements CreditMemoPaymentInterface
         ?string $accountingCode,
         ?string $accountingNumber
     ) {
+        $this->gateway = $gateway;
         $this->code = $code;
         $this->name = $name;
         $this->instructions = $instructions;
         $this->dueDate = $dueDate;
         $this->accountingCode = $accountingCode;
         $this->accountingNumber = $accountingNumber;
+    }
+
+    public function getGateway(): ?string
+    {
+        return $this->gateway;
+    }
+
+    public function setGateway(?string $gateway): void
+    {
+        $this->gateway = $gateway;
     }
 
     public function getCode(): ?string
