@@ -24,7 +24,7 @@
             <argument type="service" id="sylius.repository.order_item_unit" />
         </service>
         <service id="Sylius\RefundPlugin\Generator\CustomCreditMemoUnitGenerator">
-            <argument type="service" id="sylius.repository.order_item_unit" />
+            <argument type="service" id="sylius.repository.order" />
         </service>
 
         <service id="Sylius\RefundPlugin\Generator\CreditMemoGenerator">
