@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Sylius\RefundPlugin\Generator;
 
+use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\OrderItemInterface;
 use Sylius\Component\Core\Model\OrderItemUnitInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
@@ -15,37 +16,32 @@ use Webmozart\Assert\Assert;
 final class CustomCreditMemoUnitGenerator implements CreditMemoUnitGeneratorInterface
 {
     /** @var RepositoryInterface */
-    private $orderItemUnitRepository;
+    private $orderRepository;
 
-    public function __construct(RepositoryInterface $orderItemUnitRepository)
+    public function __construct(RepositoryInterface $orderRepository)
     {
-        $this->orderItemUnitRepository = $orderItemUnitRepository;
+        $this->orderRepository = $orderRepository;
     }
 
     public function generate(int $unitId, int $amount = null, $extra = null): CreditMemoUnitInterface
     {
-        if (empty($amount)) {
-            return new CreditMemoUnit(
-                RefundType::CUSTOM,
-                strval($unitId),
-                null,
-                [],
-                null,
-                0,
-                null,
-                0,
-                0,
-                null,
-                null
-            );
-        }
+        /** @var OrderInterface $order */
+        $order = $this->orderRepository->find($unitId);
+        Assert::notNull($order);
+        Assert::lessThanEq($amount, $order->getTotal());
 
-        $taxRate = 0.2;
+        /** @var OrderItemInterface $orderItem */
+        $orderItem = $order->getItems()->first();
+
+        /** @var OrderItemUnitInterface $orderItemUnit */
+        $orderItemUnit = $orderItem->getUnits()->first();
+
+        $taxRate = ($orderItemUnit !== null && $orderItemUnit->getTaxRate() !== null) ? $orderItemUnit->getTaxRate() : 0.2;
         $taxTotal = (int) (($amount / (1 + $taxRate)) * $taxRate);
 
         return new CreditMemoUnit(
             RefundType::CUSTOM,
-            strval($unitId),
+            (isset($extra['productName'])) ? $extra['productName'] : '',
             null,
             [],
             null,
@@ -53,8 +49,8 @@ final class CustomCreditMemoUnitGenerator implements CreditMemoUnitGeneratorInte
             $taxRate,
             $taxTotal,
             $amount,
-            null,
-            null
+            ($orderItemUnit !== null) ? $orderItemUnit->getServicesAccountingNumber() : null,
+            ($orderItemUnit !== null) ? $orderItemUnit->getTaxAccountingNumber() : null
         );
     }
 }
