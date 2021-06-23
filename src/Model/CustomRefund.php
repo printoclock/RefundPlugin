@@ -12,10 +12,14 @@ final class CustomRefund implements UnitRefundInterface
     /** @var int */
     private $total;
 
-    public function __construct(int $customId, int $total)
+    /** @var string */
+    private $label;
+
+    public function __construct(int $customId, int $total, string $label)
     {
         $this->customId = $customId;
         $this->total = $total;
+        $this->label = $label;
     }
 
     public function id(): int
@@ -26,5 +30,10 @@ final class CustomRefund implements UnitRefundInterface
     public function total(): int
     {
         return $this->total;
+    }
+
+    public function label(): string
+    {
+        return $this->label;
     }
 }

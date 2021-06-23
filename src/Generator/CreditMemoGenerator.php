@@ -19,6 +19,11 @@ use Sylius\RefundPlugin\Entity\CreditMemoPayment;
 use Sylius\RefundPlugin\Exception\InvoiceNotFound;
 use Sylius\RefundPlugin\Exception\OrderNotFound;
 use Sylius\RefundPlugin\Exception\PaymentMethodNotFound;
+use Sylius\RefundPlugin\Model\CustomRefund;
+use Sylius\RefundPlugin\Model\FeeRefund;
+use Sylius\RefundPlugin\Model\OrderItemUnitRefund;
+use Sylius\RefundPlugin\Model\PaymentRefund;
+use Sylius\RefundPlugin\Model\ShipmentRefund;
 use Sylius\RefundPlugin\Model\UnitRefundInterface;
 use Sylius\RefundPlugin\Provider\CurrentDateTimeProviderInterface;
 
@@ -119,7 +124,7 @@ final class CreditMemoGenerator implements CreditMemoGeneratorInterface
         $taxTotal = 0;
         $creditMemoUnits = [];
 
-        /** @var UnitRefundInterface $unit */
+        /** @var OrderItemUnitRefund $unit */
         foreach ($units as $unit) {
             $creditMemoUnit = $this->orderItemUnitCreditMemoUnitGenerator->generate($unit->id(), $unit->total());
 
@@ -127,15 +132,17 @@ final class CreditMemoGenerator implements CreditMemoGeneratorInterface
             $creditMemoUnits[] = $creditMemoUnit->serialize();
         }
 
-        /** @var UnitRefundInterface $custom */
+        /** @var CustomRefund $custom */
         foreach ($customs as $custom) {
-            $creditMemoUnit = $this->customCreditMemoUnitGenerator->generate($custom->id(), $custom->total());
+            $creditMemoUnit = $this->customCreditMemoUnitGenerator->generate($custom->id(), $custom->total(), [
+                'productName' => $custom->label()
+            ]);
 
             $taxTotal += $creditMemoUnit->getTaxTotal();
             $creditMemoUnits[] = $creditMemoUnit->serialize();
         }
 
-        /** @var UnitRefundInterface $shipment */
+        /** @var ShipmentRefund $shipment */
         foreach ($shipments as $shipment) {
             $creditMemoUnit = $this->shipmentCreditMemoUnitGenerator->generate($shipment->id(), $shipment->total());
 
@@ -143,7 +150,7 @@ final class CreditMemoGenerator implements CreditMemoGeneratorInterface
             $creditMemoUnits[] = $creditMemoUnit->serialize();
         }
 
-        /** @var UnitRefundInterface $payment */
+        /** @var PaymentRefund $payment */
         foreach ($payments as $payment) {
             $creditMemoUnit = $this->paymentCreditMemoUnitGenerator->generate($payment->id(), $payment->total());
 
@@ -151,7 +158,7 @@ final class CreditMemoGenerator implements CreditMemoGeneratorInterface
             $creditMemoUnits[] = $creditMemoUnit->serialize();
         }
 
-        /** @var UnitRefundInterface $fee */
+        /** @var FeeRefund $fee */
         foreach ($fees as $fee) {
             $creditMemoUnit = $this->feeCreditMemoUnitGenerator->generate($fee->id(), $fee->total(), $order->getItemUnits()->first());
 

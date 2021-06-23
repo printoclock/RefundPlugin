@@ -81,14 +81,16 @@ final class RefundUnitsCommandCreator implements RefundUnitsCommandCreatorInterf
             if (isset($refundCustom['amount']) && $refundCustom['amount'] !== '') {
                 $id = (int) $refundCustom['partial-id'];
                 $total = (int) (((float) $refundCustom['amount']) * 100);
+                $label = (string) $refundCustom['label'];
 
-                return new CustomRefund($id, $total);
+                return new CustomRefund($id, $total, $label);
             }
 
             $id = (int) $refundCustom['id'];
             $total = $this->remainingTotalProvider->getTotalLeftToRefund($id, RefundType::custom(), $orderNumber);
+            $label = (string) $refundCustom['label'];
 
-            return new CustomRefund($id, $total);
+            return new CustomRefund($id, $total, $label);
         }, $units);
     }
 

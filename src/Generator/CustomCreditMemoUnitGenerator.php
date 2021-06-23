@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Sylius\RefundPlugin\Generator;
 
 use Sylius\Component\Core\Model\OrderInterface;
-use Sylius\Component\Core\Model\OrderItemInterface;
 use Sylius\Component\Core\Model\OrderItemUnitInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Sylius\RefundPlugin\Entity\CreditMemoUnit;
@@ -30,18 +29,15 @@ final class CustomCreditMemoUnitGenerator implements CreditMemoUnitGeneratorInte
         Assert::notNull($order);
         Assert::lessThanEq($amount, $order->getTotal());
 
-        /** @var OrderItemInterface $orderItem */
-        $orderItem = $order->getItems()->first();
-
         /** @var OrderItemUnitInterface $orderItemUnit */
-        $orderItemUnit = $orderItem->getUnits()->first();
+        $orderItemUnit = $order->getItemUnits()->first();
 
         $taxRate = ($orderItemUnit !== null && $orderItemUnit->getTaxRate() !== null) ? $orderItemUnit->getTaxRate() : 0.2;
         $taxTotal = (int) (($amount / (1 + $taxRate)) * $taxRate);
 
         return new CreditMemoUnit(
             RefundType::CUSTOM,
-            (isset($extra['productName'])) ? $extra['productName'] : '',
+            ($extra !== null && isset($extra['productName'])) ? $extra['productName'] : '',
             null,
             [],
             null,
