@@ -13,6 +13,7 @@ interface CreditMemoGeneratorInterface
         string $orderNumber,
         int $total,
         array $units,
+        array $customs,
         array $shipments,
         array $payments,
         array $fees,

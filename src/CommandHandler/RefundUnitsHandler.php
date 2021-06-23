@@ -20,6 +20,9 @@ final class RefundUnitsHandler
     private $orderUnitsRefunder;
 
     /** @var RefunderInterface */
+    private $orderCustomsRefunder;
+
+    /** @var RefunderInterface */
     private $orderShipmentsRefunder;
 
     /** @var RefunderInterface */
@@ -39,6 +42,7 @@ final class RefundUnitsHandler
 
     public function __construct(
         RefunderInterface $orderUnitsRefunder,
+        RefunderInterface $orderCustomsRefunder,
         RefunderInterface $orderShipmentsRefunder,
         RefunderInterface $orderPaymentsRefunder,
         RefunderInterface $orderFeesRefunder,
@@ -47,6 +51,7 @@ final class RefundUnitsHandler
         RefundUnitsCommandValidatorInterface $refundUnitsCommandValidator
     ) {
         $this->orderUnitsRefunder = $orderUnitsRefunder;
+        $this->orderCustomsRefunder = $orderCustomsRefunder;
         $this->orderShipmentsRefunder = $orderShipmentsRefunder;
         $this->orderPaymentsRefunder = $orderPaymentsRefunder;
         $this->orderFeesRefunder = $orderFeesRefunder;
@@ -70,6 +75,7 @@ final class RefundUnitsHandler
 
         $refundedTotal = 0;
         $refundedTotal += $this->orderUnitsRefunder->refundFromOrder($command->units(), $orderNumber);
+        $refundedTotal += $this->orderCustomsRefunder->refundFromOrder($command->customs(), $orderNumber);
         $refundedTotal += $this->orderShipmentsRefunder->refundFromOrder($command->shipments(), $orderNumber);
         $refundedTotal += $this->orderPaymentsRefunder->refundFromOrder($command->payments(), $orderNumber);
         $refundedTotal += $this->orderFeesRefunder->refundFromOrder($this->getRefundFees($command->fees()), $orderNumber);
@@ -79,6 +85,7 @@ final class RefundUnitsHandler
             $command->token() ?? bin2hex(random_bytes(16)),
             $orderNumber,
             $command->units(),
+            $command->customs(),
             $command->shipments(),
             $command->payments(),
             $command->fees(),
@@ -94,6 +101,7 @@ final class RefundUnitsHandler
 
     protected function validate(RefundUnits $command) {
         $total = $this->totalUnits($command->units());
+        $total += $this->totalUnits($command->customs());
         $total += $this->totalUnits($command->shipments());
         $total += $this->totalUnits($command->payments());
         $total += $this->totalUnits($this->getRefundFees($command->fees()));

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Sylius\RefundPlugin\Creator;
 
 use Sylius\RefundPlugin\Command\RefundUnits;
+use Sylius\RefundPlugin\Model\CustomRefund;
 use Sylius\RefundPlugin\Model\FeeRefund;
 use Sylius\RefundPlugin\Model\OrderItemUnitRefund;
 use Sylius\RefundPlugin\Model\PaymentRefund;
@@ -33,17 +34,19 @@ final class RefundUnitsCommandCreator implements RefundUnitsCommandCreatorInterf
         $orderNumber = $request->attributes->get('orderNumber');
 
         $units = $this->filterEmptyRefundUnits($request->request->get('sylius_refund_units', []));
+        $customs = $this->filterEmptyRefundUnits($request->request->get('sylius_refund_customs', []));
         $shipments = $this->filterEmptyRefundUnits($request->request->get('sylius_refund_shipments', []));
         $payments = $this->filterEmptyRefundUnits($request->request->get('sylius_refund_payments', []));
         $fees = $this->parseIdsToFeeRefunds($this->filterEmptyRefundUnits($request->request->get('sylius_refund_fees', [])), $orderNumber);
 
-        if (count($units) === 0 && count($shipments) === 0 && count($payments) === 0 && count($this->getRefundFees($fees)) === 0) {
+        if (count($units) === 0 && count($customs) === 0 && count($shipments) === 0 && count($payments) === 0 && count($this->getRefundFees($fees)) === 0) {
             throw new \InvalidArgumentException('sylius_refund.at_least_one_unit_should_be_selected_to_refund');
         }
 
         return new RefundUnits(
             $orderNumber,
             $this->parseIdsToUnitRefunds($units, $orderNumber),
+            $this->parseIdsToCustomRefunds($customs, $orderNumber),
             $this->parseIdsToShipmentRefunds($shipments, $orderNumber),
             $this->parseIdsToPaymentRefunds($payments, $orderNumber),
             $fees,
@@ -69,6 +72,23 @@ final class RefundUnitsCommandCreator implements RefundUnitsCommandCreatorInterf
             $total = $this->remainingTotalProvider->getTotalLeftToRefund($id, RefundType::orderItemUnit(), $orderNumber);
 
             return new OrderItemUnitRefund($id, $total);
+        }, $units);
+    }
+
+    private function parseIdsToCustomRefunds(array $units, string $orderNumber): array
+    {
+        return array_map(function (array $refundCustom) use ($orderNumber) : UnitRefundInterface {
+            if (isset($refundCustom['amount']) && $refundCustom['amount'] !== '') {
+                $id = (int) $refundCustom['partial-id'];
+                $total = (int) (((float) $refundCustom['amount']) * 100);
+
+                return new CustomRefund($id, $total);
+            }
+
+            $id = (int) $refundCustom['id'];
+            $total = $this->remainingTotalProvider->getTotalLeftToRefund($id, RefundType::custom(), $orderNumber);
+
+            return new CustomRefund($id, $total);
         }, $units);
     }
 

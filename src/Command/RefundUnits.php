@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Sylius\RefundPlugin\Command;
 
+use Sylius\RefundPlugin\Model\CustomRefund;
 use Sylius\RefundPlugin\Model\FeeRefund;
 use Sylius\RefundPlugin\Model\OrderItemUnitRefund;
 use Sylius\RefundPlugin\Model\PaymentRefund;
@@ -16,6 +17,9 @@ final class RefundUnits
 
     /** @var array|OrderItemUnitRefund[] */
     private $units;
+
+    /** @var array|CustomRefund[] */
+    private $customs;
 
     /** @var array|ShipmentRefund[] */
     private $shipments;
@@ -44,6 +48,7 @@ final class RefundUnits
     public function __construct(
         string $orderNumber,
         array $units,
+        array $customs,
         array $shipments,
         array $payments,
         array $fees,
@@ -55,6 +60,7 @@ final class RefundUnits
     ) {
         $this->orderNumber = $orderNumber;
         $this->units = $units;
+        $this->customs = $customs;
         $this->shipments = $shipments;
         $this->payments = $payments;
         $this->fees = $fees;
@@ -74,6 +80,12 @@ final class RefundUnits
     public function units(): array
     {
         return $this->units;
+    }
+
+    /** @return array|CustomRefund[] */
+    public function customs(): array
+    {
+        return $this->customs;
     }
 
     /** @return array|ShipmentRefund[] */

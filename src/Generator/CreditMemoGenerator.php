@@ -37,6 +37,9 @@ final class CreditMemoGenerator implements CreditMemoGeneratorInterface
     private $orderItemUnitCreditMemoUnitGenerator;
 
     /** @var CreditMemoUnitGeneratorInterface */
+    private $customCreditMemoUnitGenerator;
+
+    /** @var CreditMemoUnitGeneratorInterface */
     private $shipmentCreditMemoUnitGenerator;
 
     /** @var CreditMemoUnitGeneratorInterface */
@@ -59,6 +62,7 @@ final class CreditMemoGenerator implements CreditMemoGeneratorInterface
         InvoiceRepository $invoiceRepository,
         PaymentMethodRepositoryInterface $paymentMethodRepository,
         CreditMemoUnitGeneratorInterface $orderItemUnitCreditMemoUnitGenerator,
+        CreditMemoUnitGeneratorInterface $customCreditMemoUnitGenerator,
         CreditMemoUnitGeneratorInterface $shipmentCreditMemoUnitGenerator,
         CreditMemoUnitGeneratorInterface $paymentCreditMemoUnitGenerator,
         CreditMemoUnitGeneratorInterface $feeCreditMemoUnitGenerator,
@@ -70,6 +74,7 @@ final class CreditMemoGenerator implements CreditMemoGeneratorInterface
         $this->invoiceRepository = $invoiceRepository;
         $this->paymentMethodRepository = $paymentMethodRepository;
         $this->orderItemUnitCreditMemoUnitGenerator = $orderItemUnitCreditMemoUnitGenerator;
+        $this->customCreditMemoUnitGenerator = $customCreditMemoUnitGenerator;
         $this->shipmentCreditMemoUnitGenerator = $shipmentCreditMemoUnitGenerator;
         $this->paymentCreditMemoUnitGenerator = $paymentCreditMemoUnitGenerator;
         $this->feeCreditMemoUnitGenerator = $feeCreditMemoUnitGenerator;
@@ -83,6 +88,7 @@ final class CreditMemoGenerator implements CreditMemoGeneratorInterface
         string $orderNumber,
         int $total,
         array $units,
+        array $customs,
         array $shipments,
         array $payments,
         array $fees,
@@ -116,6 +122,14 @@ final class CreditMemoGenerator implements CreditMemoGeneratorInterface
         /** @var UnitRefundInterface $unit */
         foreach ($units as $unit) {
             $creditMemoUnit = $this->orderItemUnitCreditMemoUnitGenerator->generate($unit->id(), $unit->total());
+
+            $taxTotal += $creditMemoUnit->getTaxTotal();
+            $creditMemoUnits[] = $creditMemoUnit->serialize();
+        }
+
+        /** @var UnitRefundInterface $custom */
+        foreach ($customs as $custom) {
+            $creditMemoUnit = $this->customCreditMemoUnitGenerator->generate($custom->id(), $custom->total());
 
             $taxTotal += $creditMemoUnit->getTaxTotal();
             $creditMemoUnits[] = $creditMemoUnit->serialize();
