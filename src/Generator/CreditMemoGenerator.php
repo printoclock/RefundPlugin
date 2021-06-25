@@ -136,7 +136,8 @@ final class CreditMemoGenerator implements CreditMemoGeneratorInterface
         /** @var CustomRefund $custom */
         foreach ($customs as $custom) {
             $creditMemoUnit = $this->customCreditMemoUnitGenerator->generate($custom->id(), $custom->total(), [
-                'productName' => $custom->label()
+                'productName' => $custom->label(),
+                'taxRate' => $custom->taxRate(),
             ]);
 
             $taxTotal += $creditMemoUnit->getTaxTotal();

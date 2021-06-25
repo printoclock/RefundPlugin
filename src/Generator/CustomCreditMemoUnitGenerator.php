@@ -29,11 +29,20 @@ final class CustomCreditMemoUnitGenerator implements CreditMemoUnitGeneratorInte
         Assert::notNull($order);
         Assert::lessThanEq($amount, $order->getTotal());
 
-        /** @var OrderItemUnitInterface $orderItemUnit */
-        $orderItemUnit = $order->getItemUnits()->first();
+        if (isset($extra['taxRate']) && !empty($taxRate = $extra['taxRate'])) {
+            $taxRateAmount = (float) $taxRate['amount'];
+            $servicesAccountingNumber = $taxRate['servicesAccountingNumber'];
+            $taxAccountingNumber = $taxRate['taxAccountingNumber'];
+        } else {
+            /** @var OrderItemUnitInterface|null $orderItemUnit */
+            $orderItemUnit = (false !== $orderItemUnit = $order->getItemUnits()->first()) ? $orderItemUnit : null;
 
-        $taxRate = ($orderItemUnit !== null && $orderItemUnit->getTaxRate() !== null) ? $orderItemUnit->getTaxRate() : 0.2;
-        $taxTotal = (int) (($amount / (1 + $taxRate)) * $taxRate);
+            $taxRateAmount = ($orderItemUnit !== null && $orderItemUnit->getTaxRate() !== null) ? $orderItemUnit->getTaxRate() : 0.2;
+            $servicesAccountingNumber = ($orderItemUnit !== null) ? $orderItemUnit->getServicesAccountingNumber() : null;
+            $taxAccountingNumber = ($orderItemUnit !== null) ? $orderItemUnit->getTaxAccountingNumber() : null;
+        }
+
+        $taxTotal = (int) (($amount / (1 + $taxRateAmount)) * $taxRateAmount);
 
         return new CreditMemoUnit(
             RefundType::CUSTOM,
@@ -42,11 +51,11 @@ final class CustomCreditMemoUnitGenerator implements CreditMemoUnitGeneratorInte
             [],
             null,
             $amount - $taxTotal,
-            $taxRate,
+            $taxRateAmount,
             $taxTotal,
             $amount,
-            ($orderItemUnit !== null) ? $orderItemUnit->getServicesAccountingNumber() : null,
-            ($orderItemUnit !== null) ? $orderItemUnit->getTaxAccountingNumber() : null
+            $servicesAccountingNumber,
+            $taxAccountingNumber
         );
     }
 }
