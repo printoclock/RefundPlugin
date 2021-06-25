@@ -15,11 +15,15 @@ final class CustomRefund implements UnitRefundInterface
     /** @var string */
     private $label;
 
-    public function __construct(int $customId, int $total, string $label)
+    /** @var array */
+    private $taxRate;
+
+    public function __construct(int $customId, int $total, string $label, array $taxRate = [])
     {
         $this->customId = $customId;
         $this->total = $total;
         $this->label = $label;
+        $this->taxRate = $taxRate;
     }
 
     public function id(): int
@@ -35,5 +39,10 @@ final class CustomRefund implements UnitRefundInterface
     public function label(): string
     {
         return $this->label;
+    }
+
+    public function taxRate(): array
+    {
+        return $this->taxRate;
     }
 }
