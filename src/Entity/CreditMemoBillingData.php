@@ -31,6 +31,9 @@ class CreditMemoBillingData implements CreditMemoBillingDataInterface
     /** @var string|null */
     private $countryCode;
 
+    /** @var string|null */
+    private $vatNumber;
+
     public function __construct(
         ?string $firstName = null,
         ?string $lastName = null,
@@ -39,7 +42,8 @@ class CreditMemoBillingData implements CreditMemoBillingDataInterface
         ?string $street = null,
         ?string $postcode = null,
         ?string $city = null,
-        ?string $countryCode = null
+        ?string $countryCode = null,
+        ?string $vatNumber = null
     )
     {
         $this->firstName = $firstName;
@@ -50,6 +54,7 @@ class CreditMemoBillingData implements CreditMemoBillingDataInterface
         $this->postcode = $postcode;
         $this->city = $city;
         $this->countryCode = $countryCode;
+        $this->vatNumber = $vatNumber;
     }
 
     public function getFirstName(): ?string
@@ -92,6 +97,11 @@ class CreditMemoBillingData implements CreditMemoBillingDataInterface
         return $this->countryCode;
     }
 
+    public function getVatNumber(): ?string
+    {
+        return $this->vatNumber;
+    }
+
     public function serialize(): string
     {
         $serialized = json_encode([
@@ -103,6 +113,7 @@ class CreditMemoBillingData implements CreditMemoBillingDataInterface
             'postcode' => $this->postcode,
             'city' => $this->city,
             'country_code' => $this->countryCode,
+            'vat_number' => $this->vatNumber,
         ]);
 
         if ($serialized === false) {
@@ -124,7 +135,8 @@ class CreditMemoBillingData implements CreditMemoBillingDataInterface
             $data['street'],
             $data['postcode'],
             $data['city'],
-            $data['country_code']
+            $data['country_code'],
+            $data['vat_number']
         );
     }
 }
