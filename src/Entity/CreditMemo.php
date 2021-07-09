@@ -273,6 +273,11 @@ class CreditMemo implements CreditMemoInterface
         return CreditMemoBillingData::unserialize($this->billingData);
     }
 
+    public function setBillingData(string $billingData): void
+    {
+        $this->billingData = $billingData;
+    }
+
     public function getShopBillingData(): CreditMemoBillingData
     {
         return CreditMemoBillingData::unserialize($this->shopBillingData);
