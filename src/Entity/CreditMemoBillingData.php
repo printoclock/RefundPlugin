@@ -128,15 +128,15 @@ class CreditMemoBillingData implements CreditMemoBillingDataInterface
         $data = json_decode($serialized, true);
 
         return new self(
-            $data['first_name'],
-            $data['last_name'],
-            $data['company'],
-            $data['tax_id'],
-            $data['street'],
-            $data['postcode'],
-            $data['city'],
-            $data['country_code'],
-            $data['vat_number']
+            isset($data['first_name']) ? $data['first_name'] : null,
+            isset($data['last_name']) ? $data['last_name'] : null,
+            isset($data['company']) ? $data['company'] : null,
+            isset($data['tax_id']) ? $data['tax_id'] : null,
+            isset($data['street']) ? $data['street'] : null,
+            isset($data['postcode']) ? $data['postcode'] : null,
+            isset($data['city']) ? $data['city'] : null,
+            isset($data['country_code']) ? $data['country_code'] : null,
+            isset($data['vat_number']) ? $data['vat_number'] : null
         );
     }
 }
